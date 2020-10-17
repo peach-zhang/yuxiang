@@ -17,7 +17,7 @@
     </resultMap>
 
     <select id="queryRoleByUserId" resultType="com.yuxianglw.entity.SysRole" parameterType="string">
-            select s1.* from sys_role s1 left join sys_user_role s2 on s1.id = s2.role_id where s2.user_id = #{userI}
+            SELECT S1.* FROM SYS_ROLE S1 LEFT JOIN SYS_USER_ROLE S2 ON S1.ID = S2.ROLE_ID WHERE S2.USER_ID = #{userI}
     </select>
 
 </mapper>

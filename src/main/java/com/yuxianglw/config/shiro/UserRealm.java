@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yuxianglw.entity.SysRole;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.entity.SysUserRole;
-import com.yuxianglw.mapper.SysRoleMapper;
-import com.yuxianglw.mapper.SysUserMapper;
-import com.yuxianglw.mapper.SysUserRoleMapper;
+import com.yuxianglw.mapper.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -31,7 +29,7 @@ public class UserRealm extends AuthorizingRealm {
 	private SysUserMapper sysUserMapper;
 	
 	@Autowired
-	private SysUserRoleMapper sysUserRoleMapper;
+	private SysPermissionMapper sysPermissionMapper;
 	
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
@@ -45,7 +43,10 @@ public class UserRealm extends AuthorizingRealm {
 		List<SysRole> sysRoles = sysRoleMapper.queryRoleByUserId(sysUser.getId());
 		if(CollectionUtils.isNotEmpty(sysRoles)){
 			List<String> roles = sysRoles.stream().map(SysRole::getRoleName).collect(Collectors.toList());
+			List<String> roleIds = sysRoles.stream().map(SysRole::getId).collect(Collectors.toList());
 			authorizationInfo.addRoles(roles);
+			sysPermissionMapper.queryPermissionByRoleIds(roleIds);
+
 		}
         return authorizationInfo;
 	}
