@@ -1,5 +1,6 @@
 package com.yuxianglw.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -21,7 +22,7 @@ public class SysCommonFile implements Serializable {
     /**
      * 主键
      */
-    @TableField("ID")
+    @TableId("ID")
     private String id;
 
     /**
