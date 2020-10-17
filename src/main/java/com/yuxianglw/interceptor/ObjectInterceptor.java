@@ -1,6 +1,7 @@
 package com.yuxianglw.interceptor;
 
 import com.yuxianglw.common.CommonConstant;
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -53,7 +55,7 @@ public class ObjectInterceptor implements Interceptor {
         }
 
         /**
-         * 更新操作
+         * 新增操作
          *
          * @param executor executor
          * @param ms       ms
@@ -86,7 +88,7 @@ public class ObjectInterceptor implements Interceptor {
         }
 
         /**
-         * 新增操作
+         * 修改操作
          *
          * @param executor executor
          * @param ms       ms
@@ -94,26 +96,31 @@ public class ObjectInterceptor implements Interceptor {
          * @return 返回执行结果
          */
         private Object executeUpdate(final Executor executor, final MappedStatement ms, final Object paramObj) throws Exception {
-            final Field[] fields = paramObj.getClass().getDeclaredFields();
-            for (final Field field : fields) {
-                field.setAccessible(true);
-                final String fieldName = field.getName();
-                switch (fieldName) {
-                    case "updatedBy":
-                        field.set(paramObj, "zhangtao");
-                        break;
-                    case "updatedTime":
-                        field.set(paramObj, LocalDateTime.now());
-                        break;
-                    default:
-                        break;
+            if (paramObj instanceof MapperMethod.ParamMap) {
+                final MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) paramObj;
+                for (final Object entity : paramMap.values()) {
+                    final Field[] fields = entity.getClass().getDeclaredFields();
+                    for (final Field field : fields) {
+                        field.setAccessible(true);
+                        final String fieldName = field.getName();
+                        switch (fieldName) {
+                            case "updatedBy":
+                                field.set(entity, "zhangtao");
+                                break;
+                            case "updatedTime":
+                                field.set(entity, LocalDateTime.now());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
             return executor.update(ms, paramObj);
         }
 
         /**
-         * 新增操作
+         * 删除操作
          *
          * @param executor executor
          * @param ms       ms
