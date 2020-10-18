@@ -3,7 +3,7 @@ package com.yuxianglw.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Controller;
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-17
+ * @since 2020-10-18
  */
-@Controller
-@RequestMapping("/sysPermissionMenu")
+@RestController
+@RequestMapping("//sysPermissionMenu")
 public class SysPermissionMenuController {
 
 }

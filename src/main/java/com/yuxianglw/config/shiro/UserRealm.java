@@ -55,7 +55,7 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		UsernamePasswordToken UsernamePasswordToken = (UsernamePasswordToken) token;
-		SysUser sysUser = sysUserMapper.selectUserByName(UsernamePasswordToken.getUsername());
+		SysUser sysUser = sysUserMapper.selectUserByName(UsernamePasswordToken.getUsername()).get(0);
 		if(Objects.nonNull(sysUser)) {
 			return new SimpleAuthenticationInfo(sysUser, sysUser.getPassWord(),getName());
 		}

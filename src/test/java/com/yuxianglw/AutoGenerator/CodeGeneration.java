@@ -57,9 +57,9 @@ public class CodeGeneration {
         // 自动lombok
         strategy.setEntityLombokModel(true);
         //逻辑删除标识字段
-        strategy.setLogicDeleteFieldName("delFlag");
+        strategy.setLogicDeleteFieldName("DEL_FLAG");
         // 乐观锁
-        strategy.setVersionFieldName("version");
+        strategy.setVersionFieldName("REVISION");
         //rest风格
         strategy.setRestControllerStyle(true);
         autoGenerator.setStrategy(strategy);

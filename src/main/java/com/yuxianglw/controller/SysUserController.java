@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-17
+ * @since 2020-10-18
  */
 @RestController
-@RequestMapping("/sysUser")
+@RequestMapping("//sysUser")
 public class SysUserController {
 
     @Autowired

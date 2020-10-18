@@ -2,10 +2,6 @@ package com.yuxianglw.mapper;
 
 import com.yuxianglw.entity.SysUserRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 
 /**
  * <p>
@@ -13,10 +9,8 @@ import java.util.List;
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-17
+ * @since 2020-10-18
  */
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
 
-
-    List<SysUserRole> queryRoleByUserId(@Param("userId") String userId);
 }
