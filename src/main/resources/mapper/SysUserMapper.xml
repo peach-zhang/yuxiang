@@ -15,7 +15,7 @@
         <result column="EMAIL" property="email" />
         <result column="SUPERIOR_ID" property="superiorId" />
         <result column="STATUS" property="status" />
-        <result column="DEl_FLAG" property="delFlag" />
+        <result column="DEL_FLAG" property="delFlag" />
         <result column="REVISION" property="revision" />
         <result column="CREATED_BY" property="createdBy" />
         <result column="CREATED_TIME" property="createdTime" />

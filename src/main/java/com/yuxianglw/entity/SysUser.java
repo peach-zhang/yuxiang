@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import lombok.Data;
@@ -93,7 +94,8 @@ public class SysUser implements Serializable {
       /**
      * 是否删除
      */
-      @TableField("DEl_FLAG")
+      @TableField("DEL_FLAG")
+    @TableLogic
     private String delFlag;
 
       /**
