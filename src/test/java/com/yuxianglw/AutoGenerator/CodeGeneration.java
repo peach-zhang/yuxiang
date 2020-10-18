@@ -66,7 +66,8 @@ public class CodeGeneration {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.yuxianglw");
+        pc.setParent("com");
+        pc.setModuleName("yuxianglw");
         pc.setController("controller");
         pc.setService("service");
         pc.setServiceImpl("service.impl");

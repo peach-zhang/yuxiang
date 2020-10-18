@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2020-10-18
  */
 @RestController
-@RequestMapping("//sysUser")
+@RequestMapping("/yuxianglw/sysUser")
 public class SysUserController {
 
     @Autowired
