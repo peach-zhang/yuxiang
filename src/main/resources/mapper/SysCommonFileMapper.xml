@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.yuxianglw.entity.SysCommonFile">
-        <result column="ID" property="id" />
+        <id column="ID" property="id" />
         <result column="USER_ID" property="userId" />
         <result column="TYPE" property="type" />
         <result column="PATH" property="path" />

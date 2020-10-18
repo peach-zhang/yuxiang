@@ -1,12 +1,14 @@
 package com.yuxianglw.config.shiro;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yuxianglw.entity.SysPermission;
 import com.yuxianglw.entity.SysRole;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.entity.SysUserRole;
-import com.yuxianglw.mapper.*;
+import com.yuxianglw.mapper.SysPermissionMapper;
+import com.yuxianglw.mapper.SysRoleMapper;
+import com.yuxianglw.mapper.SysUserMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -14,9 +16,9 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +47,11 @@ public class UserRealm extends AuthorizingRealm {
 			List<String> roles = sysRoles.stream().map(SysRole::getRoleName).collect(Collectors.toList());
 			List<String> roleIds = sysRoles.stream().map(SysRole::getId).collect(Collectors.toList());
 			authorizationInfo.addRoles(roles);
-			sysPermissionMapper.queryPermissionByRoleIds(roleIds);
+			List<SysPermission> sysPermissions = sysPermissionMapper.queryPermissionByRoleIds(roleIds);
+			if(CollectionUtils.isNotEmpty(sysPermissions)){
+				Set<String> permissions = sysPermissions.stream().map(SysPermission::getName).collect(Collectors.toSet());
+				authorizationInfo.addStringPermissions(permissions);
+			}
 
 		}
         return authorizationInfo;

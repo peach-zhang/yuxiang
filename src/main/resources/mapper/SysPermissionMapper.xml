@@ -14,7 +14,7 @@
         <result column="UPDATED_BY" property="updatedBy" />
         <result column="UPDATED_TIME" property="updatedTime" />
     </resultMap>
-    
+
     <select id="queryPermissionByRoleIds" resultType="com.yuxianglw.entity.SysPermission" parameterType="list">
         SELECT S1.* FROM SYS_PERMISSION S1 LEFT JOIN SYS_ROLE_PERMISSION S2 ON S1.ID = S2.ROLE_ID
         WHERE S2.ROLE_ID IN

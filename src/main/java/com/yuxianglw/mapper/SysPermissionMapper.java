@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 
-    void queryPermissionByRoleIds(List<String> roleIds);
+    List<SysPermission> queryPermissionByRoleIds(List<String> roleIds);
 }
