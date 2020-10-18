@@ -1,6 +1,7 @@
 package com.yuxianglw.controller;
 
 
+import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,11 @@ public class SysUserController {
         return  save?"保存成功":"保存失败";
     }
 
-    @PutMapping("/deleteUser")
-    public String deleteUser(@RequestParam("id") String id){
-        boolean save = sysUserService.removeById(id);
-        return  save?"删除成功":"删除失败";
+    @DeleteMapping("/deleteUser")
+    public Result<?> deleteUser(@RequestParam("id") String id){
+        boolean result = sysUserService.removeById(id);
+        String msg = result?"删除成功":"删除失败";
+        return Result.ok(msg);
     }
 
 }
