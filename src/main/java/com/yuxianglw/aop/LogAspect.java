@@ -71,8 +71,7 @@ public class LogAspect {
         sysLog.setParam(params);
         //返回值
         String results = JSON.toJSONString(result);
-        System.out.println(results);
-        sysLog.setResult("123");
+        sysLog.setResult(results);
         //获取用户ip地址
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
         sysLog.setIp(IpUtils.getIpAddr(request));
