@@ -29,9 +29,9 @@ public class SysUserController {
     }
 
     @PutMapping("/updateUser")
-    public String updateUser(@RequestBody SysUser sysUser){
+    public Result updateUser(@RequestBody SysUser sysUser){
         boolean save = sysUserService.updateById(sysUser);
-        return  save?"保存成功":"保存失败";
+        return  save?Result.ok("更新成功"):Result.error("保存失败");
     }
 
     @DeleteMapping("/deleteUser")
