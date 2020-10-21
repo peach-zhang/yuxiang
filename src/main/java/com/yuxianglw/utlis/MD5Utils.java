@@ -14,8 +14,10 @@ public class MD5Utils {
      * @return
      */
     public static String md5Encryption(String source,String salt){
-        String algorithmName = "MD5";//加密算法
-        int hashIterations = 1024;//加密次数
+        //加密算法
+        String algorithmName = "MD5";
+        //加密次数
+        int hashIterations = 1024;
         SimpleHash simpleHash = new SimpleHash(algorithmName,source,salt,hashIterations);
         return simpleHash+"";
     }

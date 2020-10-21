@@ -27,7 +27,6 @@ public class LoginConctoller {
     @PostMapping("/login")
     public Result<?> login(@RequestBody LoginUser loginUser){
         String token = SysUserService.login(loginUser.getUserName(), loginUser.getPassWord());
-        return Result.ok(token);
-
+        return Result.ok((Object)token);
     }
 }
