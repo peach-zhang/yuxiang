@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
     @Select("SELECT * FROM SYS_USER S1 WHERE  S1.USER_NAME = #{username}")
-    List<SysUser> selectUserByName(String username);
+    SysUser selectUserByName(String username);
 }

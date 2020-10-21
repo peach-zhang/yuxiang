@@ -2,6 +2,7 @@ package com.yuxianglw.config.shiro;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.entity.SysPermission;
 import com.yuxianglw.entity.SysRole;
 import com.yuxianglw.entity.SysUser;
@@ -9,6 +10,7 @@ import com.yuxianglw.entity.SysUserRole;
 import com.yuxianglw.mapper.SysPermissionMapper;
 import com.yuxianglw.mapper.SysRoleMapper;
 import com.yuxianglw.mapper.SysUserMapper;
+import com.yuxianglw.utlis.JWTUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -16,8 +18,8 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
  * @author zhangtao
  *
  */
+@Component
 public class UserRealm extends AuthorizingRealm {
 	
 	@Autowired
@@ -35,6 +38,14 @@ public class UserRealm extends AuthorizingRealm {
 	
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+
+	/**
+	 * 大坑！，必须重写此方法，不然Shiro会报错
+	 */
+	@Override
+	public boolean supports(AuthenticationToken token) {
+		return token instanceof JWTToken;
+	}
 	
 	/* 授权 */
 	@Override
@@ -59,13 +70,33 @@ public class UserRealm extends AuthorizingRealm {
 
 	/* 认证 */
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-		UsernamePasswordToken UsernamePasswordToken = (UsernamePasswordToken) token;
-		SysUser sysUser = sysUserMapper.selectUserByName(UsernamePasswordToken.getUsername()).get(0);
-		if(Objects.nonNull(sysUser)) {
-			return new SimpleAuthenticationInfo(sysUser, sysUser.getPassWord(),getName());
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
+
+		String token = (String) auth.getCredentials();
+		// 解密获得username，用于和数据库进行对比
+		String username = JWTUtils.getUsername(token);
+
+		if (username == null) {
+			throw new AuthenticationException(" token错误，请重新登入！");
 		}
-		return null;
+		SysUser sysUser = sysUserMapper.selectUserByName(username);
+
+		if (sysUser == null) {
+			throw new AccountException("账号不存在!");
+		}
+		if(JWTUtils.isExpire(token)){
+			throw new AuthenticationException(" token过期，请重新登入！");
+		}
+
+		if (!JWTUtils.verify(token, username, sysUser.getPassWord())) {
+			throw new CredentialsException("密码错误!");
+		}
+
+		if(org.apache.commons.lang3.StringUtils.equals(sysUser.getStatus(),"01")){
+			throw new LockedAccountException("账号已被锁定!");
+		}
+
+		return new SimpleAuthenticationInfo(sysUser, token, getName());
 	}
 
 }
