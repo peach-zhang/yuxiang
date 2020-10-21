@@ -18,15 +18,15 @@ public class GlobalExceptionHandle<T> {
         return Result.ok(data);
     }
 
-    @ExceptionHandler(UserDefinedException.class)
+    @ExceptionHandler(ServiceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result sendErrorResponse_UserDefined(Exception exception){
+    public Result sendErrorResponseService(Exception exception){
         return Result.error(exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result sendErrorResponse_System(Exception exception){
+    public Result sendErrorResponseSystem(Exception exception){
         return Result.error("系统错误");
     }
 }

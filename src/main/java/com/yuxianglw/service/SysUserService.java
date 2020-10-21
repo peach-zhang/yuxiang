@@ -24,4 +24,13 @@ public interface SysUserService extends IService<SysUser> {
      */
     public Result<?> deleteUserById(@Param("id") String id);
 
+    /**
+     * 用户登入
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    String login(String username, String password);
+
 }
