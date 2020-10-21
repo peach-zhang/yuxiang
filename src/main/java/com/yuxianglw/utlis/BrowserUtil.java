@@ -3,7 +3,7 @@ package com.yuxianglw.utlis;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by zhangyukang on 2019/11/10 15:50
+ * Created by zhangtao on 2019/11/10 15:50
  */
 public class BrowserUtil {
     /**

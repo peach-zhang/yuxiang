@@ -1,10 +1,8 @@
 package com.yuxianglw.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +25,7 @@ public class SysLog implements Serializable {
       /**
      * 主键
      */
-      @TableField("ID")
+      @TableId("ID")
     private String id;
 
       /**

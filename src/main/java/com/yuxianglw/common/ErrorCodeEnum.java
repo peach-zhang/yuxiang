@@ -7,7 +7,7 @@ import lombok.Getter;
  * 业务错误码：返回结果的状态码
  *
  * 如果想要代码更具维护性一点,可以定义不同种类的错误码,都实现 BaseCodeInterface
- * @Author zhangyukang
+ * @Author zhangtao
  * @Date 2020/3/1 14:51
  * @Version 1.0
  **/
@@ -22,6 +22,7 @@ public enum  ErrorCodeEnum implements BaseCodeInterface {
     SERVER_BUSY(503,"服务器正忙，请稍后再试!"),
     //用户相关：10000**
     USER_ACCOUNT_NOT_FOUND(10001, "账号不存在!"),
+    LOGIN_NO_TOKEN(50001, "Token无效，您无权访问该接口!"),
     DoNotAllowToDisableTheCurrentUser(10002,"不允许禁用当前用户"),
     //业务异常
     PRODUCT_IS_REMOVE(30001,"物资已移入回收站"),

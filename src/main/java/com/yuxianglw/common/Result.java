@@ -1,14 +1,14 @@
 package com.yuxianglw.common;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- *   接口返回数据格式
- * @author scott
- * @email jeecgos@163.com
- * @date  2019年1月19日
+ *  接口返回数据格式
+ * @author zhangtao
  */
 @Data
 public class Result<T> implements Serializable {
@@ -38,7 +38,8 @@ public class Result<T> implements Serializable {
 	/**
 	 * 时间戳
 	 */
-	private long timestamp = System.currentTimeMillis();
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	private LocalDateTime timestamp = LocalDateTime.now();
 
 	public Result() {
 		

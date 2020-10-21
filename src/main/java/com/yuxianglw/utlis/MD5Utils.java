@@ -3,7 +3,7 @@ package com.yuxianglw.utlis;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**
- * @Author zhangyukang
+ * @Author zhangtao
  * @Date 2020/3/1 12:33
  * @Version 1.0
  **/

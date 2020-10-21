@@ -2,7 +2,7 @@ package com.yuxianglw.common;
 
 /**
  * 自定义的错误描述枚举类需实现该接口
- * @Author zhangyukang
+ * @Author zhangtao
  * @Date 2020/3/1 14:49
  * @Version 1.0
  **/

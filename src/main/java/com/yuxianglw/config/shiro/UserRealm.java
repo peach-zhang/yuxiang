@@ -12,6 +12,7 @@ import com.yuxianglw.mapper.SysRoleMapper;
 import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.utlis.JWTUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -92,7 +93,7 @@ public class UserRealm extends AuthorizingRealm {
 			throw new CredentialsException("密码错误!");
 		}
 
-		if(org.apache.commons.lang3.StringUtils.equals(sysUser.getStatus(),"01")){
+		if(!StringUtils.equals(sysUser.getStatus(),"Active")){
 			throw new LockedAccountException("账号已被锁定!");
 		}
 
