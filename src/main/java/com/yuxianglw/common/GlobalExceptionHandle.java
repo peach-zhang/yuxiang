@@ -19,13 +19,11 @@ public class GlobalExceptionHandle<T> {
     }
 
     @ExceptionHandler(ServiceException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result sendErrorResponseService(ServiceException exception){
         return Result.error(exception.getErrorCode(),exception.getErrorMsg());
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result sendErrorResponseSystem(Exception exception){
         return Result.error("系统错误");
     }

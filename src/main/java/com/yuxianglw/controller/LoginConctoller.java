@@ -29,4 +29,10 @@ public class LoginConctoller {
         String token = SysUserService.login(loginUser.getUserName(), loginUser.getPassWord());
         return Result.ok((Object)token);
     }
+    @PostMapping("/loginout")
+    public Result<?> loginout(@RequestBody LoginUser loginUser){
+        String token = SysUserService.login(loginUser.getUserName(), loginUser.getPassWord());
+        return Result.ok((Object)token);
+    }
+
 }
