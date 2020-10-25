@@ -2,6 +2,7 @@ package com.yuxianglw.config.shiro;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yuxianglw.common.CommonEnum;
 import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.entity.SysPermission;
 import com.yuxianglw.entity.SysRole;
@@ -18,6 +19,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.crazycake.shiro.RedisCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -30,15 +32,26 @@ import java.util.stream.Collectors;
  */
 @Component
 public class UserRealm extends AuthorizingRealm {
-	
+
 	@Autowired
 	private SysUserMapper sysUserMapper;
-	
+
 	@Autowired
 	private SysPermissionMapper sysPermissionMapper;
-	
+
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+
+	public UserRealm(){
+		//设置cachemanager
+		this.setCacheManager(new RedisCacheManager());
+		//开启权限认证缓存
+		this.setCachingEnabled(true);
+		this.setAuthenticationCachingEnabled(true);
+		this.setAuthenticationCacheName("AuthenticationCache");
+		this.setAuthorizationCachingEnabled(true);
+		this.setAuthorizationCacheName("AuthorizationCache");
+	}
 
 	/**
 	 * 大坑！，必须重写此方法，不然Shiro会报错
@@ -47,7 +60,7 @@ public class UserRealm extends AuthorizingRealm {
 	public boolean supports(AuthenticationToken token) {
 		return token instanceof JWTToken;
 	}
-	
+
 	/* 授权 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -93,11 +106,12 @@ public class UserRealm extends AuthorizingRealm {
 			throw new CredentialsException("密码错误!");
 		}
 
-		if(!StringUtils.equals(sysUser.getStatus(),"Active")){
-			throw new LockedAccountException("账号已被锁定!");
+		if(StringUtils.equals(sysUser.getStatus(), CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
+			throw new LockedAccountException(CommonEnum.ACCOUNT_NUMBER_LOCK.getMsg());
 		}
 
 		return new SimpleAuthenticationInfo(sysUser, token, getName());
 	}
+
 
 }
