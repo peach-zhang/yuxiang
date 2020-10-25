@@ -112,8 +112,8 @@ public class ShiroConfig {
 	@Bean
 	public RedisManager redisManager(RedisProperties redisProperties){
 		RedisManager redisManager = new RedisManager();
-//		redisManager.setDatabase(redisProperties.getDatabase());
-//		redisManager.setHost(redisProperties.getHost()+":"+redisProperties.getPort());
+		redisManager.setDatabase(redisProperties.getDatabase());
+		redisManager.setHost(redisProperties.getHost()+":"+redisProperties.getPort());
 		return redisManager;
 	}
 
@@ -123,8 +123,5 @@ public class ShiroConfig {
 		redisCacheManager.setRedisManager(redisManager);
 		return redisCacheManager;
 	}
-
-
-
 
 }
