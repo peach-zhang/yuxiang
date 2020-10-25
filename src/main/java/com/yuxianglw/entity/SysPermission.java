@@ -12,11 +12,11 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 权限表
+ * 权限表 
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-18
+ * @since 2020-10-25
  */
 @Data
   @EqualsAndHashCode(callSuper = false)
@@ -38,10 +38,10 @@ public class SysPermission implements Serializable {
     private String name;
 
       /**
-     * 路径
+     * 备注
      */
-      @TableField("URL")
-    private String url;
+      @TableField("REMARK")
+    private String remark;
 
       /**
      * 是否删除

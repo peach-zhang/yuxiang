@@ -7,11 +7,11 @@ import java.util.List;
 
 /**
  * <p>
- * 权限表 Mapper 接口
+ * 权限表  Mapper 接口
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-18
+ * @since 2020-10-25
  */
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 

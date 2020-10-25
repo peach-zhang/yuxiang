@@ -45,7 +45,7 @@ public class CodeGeneration {
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("200967tao");
-        dsc.setUrl("jdbc:mysql://192.168.100.154:3306/test_db?useUnicode=true&characterEncoding=utf8");  //指定数据库
+        dsc.setUrl("jdbc:mysql://203.195.174.82:3306/db_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai");  //指定数据库
         autoGenerator.setDataSource(dsc);
 
        // 策略配置

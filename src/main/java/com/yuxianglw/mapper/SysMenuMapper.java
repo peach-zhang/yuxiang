@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * 菜单 Mapper 接口
+ * 菜单  Mapper 接口
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-18
+ * @since 2020-10-25
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 

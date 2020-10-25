@@ -23,12 +23,9 @@ public class ShiroConfig {
 	@Bean("securityManager")
 	public DefaultWebSecurityManager defaultWebSecurityManager(UserRealm realm,RedisCacheManager redisCacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-		// 使用自己的realm
+		// 使用自定义realm
 		securityManager.setRealm(realm);
-		/*
-		 * 关闭shiro自带的session，详情见文档
-		 * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
-		 */
+		//关闭session
 		DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
 		DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
 		defaultSessionStorageEvaluator.setSessionStorageEnabled(false);

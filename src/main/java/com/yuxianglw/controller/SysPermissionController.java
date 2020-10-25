@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 权限表 前端控制器
+ * 权限表  前端控制器
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-18
+ * @since 2020-10-25
  */
 @RestController
 @RequestMapping("/yuxianglw/sysPermission")

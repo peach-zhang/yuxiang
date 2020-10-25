@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.yuxianglw.entity.SysPermission">
         <id column="ID" property="id" />
         <result column="NAME" property="name" />
-        <result column="URL" property="url" />
+        <result column="REMARK" property="remark" />
         <result column="DEL_FLAG" property="delFlag" />
         <result column="REVISION" property="revision" />
         <result column="CREATED_BY" property="createdBy" />

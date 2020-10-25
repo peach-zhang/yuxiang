@@ -12,11 +12,11 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 菜单
+ * 菜单 
  * </p>
  *
  * @author zhangtao
- * @since 2020-10-18
+ * @since 2020-10-25
  */
 @Data
   @EqualsAndHashCode(callSuper = false)
@@ -32,10 +32,22 @@ public class SysMenu implements Serializable {
       private String id;
 
       /**
-     * 类型
+     * 标题
      */
-      @TableField("TYPE")
-    private String type;
+      @TableField("TITLE")
+    private String title;
+
+      /**
+     * 地址
+     */
+      @TableField("URL")
+    private String url;
+
+      /**
+     * 父级菜单 父级菜单的id
+     */
+      @TableField("PARENT")
+    private String parent;
 
       /**
      * 是否删除
