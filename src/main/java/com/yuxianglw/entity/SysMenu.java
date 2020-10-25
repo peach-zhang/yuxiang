@@ -50,6 +50,12 @@ public class SysMenu implements Serializable {
     private String parent;
 
       /**
+     * 图标
+     */
+      @TableField("ICON")
+    private String icon;
+
+      /**
      * 是否删除
      */
       @TableField("DEL_FLAG")
