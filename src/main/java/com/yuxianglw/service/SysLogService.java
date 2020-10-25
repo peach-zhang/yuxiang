@@ -1,7 +1,7 @@
 package com.yuxianglw.service;
 
-import com.yuxianglw.entity.SysLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuxianglw.entity.SysLog;
 
 /**
  * <p>

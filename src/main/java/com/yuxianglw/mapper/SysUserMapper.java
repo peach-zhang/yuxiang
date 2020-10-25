@@ -1,10 +1,8 @@
 package com.yuxianglw.mapper;
 
-import com.yuxianglw.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yuxianglw.entity.SysUser;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 
 /**
  * <p>

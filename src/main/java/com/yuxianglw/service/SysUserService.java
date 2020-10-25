@@ -1,11 +1,9 @@
 package com.yuxianglw.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
-import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * <p>

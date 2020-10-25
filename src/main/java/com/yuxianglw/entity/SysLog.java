@@ -1,15 +1,15 @@
 package com.yuxianglw.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 系统日志 
+ * 系统日志
  * </p>
  *
  * @author zhangtao

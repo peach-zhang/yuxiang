@@ -19,9 +19,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.crazycake.shiro.RedisCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
@@ -31,7 +29,6 @@ import java.util.stream.Collectors;
  * @author zhangtao
  *
  */
-@Component
 public class UserRealm extends AuthorizingRealm {
 
 	@Autowired
@@ -42,20 +39,6 @@ public class UserRealm extends AuthorizingRealm {
 
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
-
-	@Autowired
-	private RedisCacheManager RedisCacheManager;
-
-	public UserRealm(){
-		//设置cachemanager
-		this.setCacheManager(RedisCacheManager);
-		//开启权限认证缓存
-		this.setCachingEnabled(true);
-		this.setAuthenticationCachingEnabled(true);
-		this.setAuthenticationCacheName("AuthenticationCache");
-		this.setAuthorizationCachingEnabled(true);
-		this.setAuthorizationCacheName("AuthorizationCache");
-	}
 
 	/**
 	 * 大坑！，必须重写此方法，不然Shiro会报错

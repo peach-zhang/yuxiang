@@ -1,9 +1,9 @@
 package com.yuxianglw.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.entity.SysPermission;
 import com.yuxianglw.mapper.SysPermissionMapper;
 import com.yuxianglw.service.SysPermissionService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

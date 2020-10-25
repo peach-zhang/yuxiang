@@ -1,7 +1,7 @@
 package com.yuxianglw.mapper;
 
-import com.yuxianglw.entity.SysRolePermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yuxianglw.entity.SysRolePermission;
 
 /**
  * <p>

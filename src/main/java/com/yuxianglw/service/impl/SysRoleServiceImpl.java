@@ -1,9 +1,9 @@
 package com.yuxianglw.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.entity.SysRole;
 import com.yuxianglw.mapper.SysRoleMapper;
 import com.yuxianglw.service.SysRoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

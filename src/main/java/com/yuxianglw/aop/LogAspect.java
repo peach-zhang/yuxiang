@@ -1,4 +1,5 @@
 package com.yuxianglw.aop;
+
 import com.alibaba.fastjson.JSON;
 import com.yuxianglw.entity.SysLog;
 import com.yuxianglw.service.SysLogService;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 
 @Aspect
 @Component
@@ -20,16 +20,16 @@ public class LogAspect {
 
     @Autowired
     private SysLogService sysLogService;
- 
+
     /**
      * 定义切入点，切入点为cn.unbug.controller.*下所有的类的中的所有函数
      *通过@Pointcut注解声明频繁使用的切点表达式
      */
     @Pointcut("execution(public * com.yuxianglw.controller.*.*(..)))")
     public void BrokerPointcut(){
- 
+
     }
- 
+
     /**
     * @description  在连接点执行之前执行的通知
     */
@@ -37,7 +37,7 @@ public class LogAspect {
     public void doBefore(){
         System.out.println("在连接点执行之前执行的通知！");
     }
- 
+
     /**
      * @description  在连接点执行之后执行的通知（返回通知和异常通知的异常）
      */
@@ -45,7 +45,7 @@ public class LogAspect {
     public void doAfter(){
         System.out.println("在连接点执行之后执行的通知");
     }
- 
+
     /**
      * @description  在连接点执行之后执行的通知（返回通知）
      */
@@ -78,7 +78,7 @@ public class LogAspect {
         //调用service保存SysLog实体类到数据库
         sysLogService.save(sysLog);
     }
- 
+
     /**
      * @description  在连接点执行之后执行的通知（异常通知）
      */

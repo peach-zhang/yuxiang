@@ -1,10 +1,8 @@
 package com.yuxianglw.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysMenu;
-import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
  * <p>

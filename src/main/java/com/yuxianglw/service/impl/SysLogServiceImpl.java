@@ -1,9 +1,9 @@
 package com.yuxianglw.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.entity.SysLog;
 import com.yuxianglw.mapper.SysLogMapper;
 import com.yuxianglw.service.SysLogService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

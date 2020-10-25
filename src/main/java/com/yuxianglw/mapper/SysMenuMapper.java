@@ -1,7 +1,7 @@
 package com.yuxianglw.mapper;
 
-import com.yuxianglw.entity.SysMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yuxianglw.entity.SysMenu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

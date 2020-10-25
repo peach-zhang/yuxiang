@@ -1,5 +1,6 @@
 package com.yuxianglw.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.common.CommonConstant;
 import com.yuxianglw.common.ErrorCodeEnum;
 import com.yuxianglw.common.Result;
@@ -8,7 +9,6 @@ import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.utlis.JWTUtils;
 import com.yuxianglw.utlis.MD5Utils;
 import org.apache.shiro.SecurityUtils;
@@ -16,7 +16,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 /**

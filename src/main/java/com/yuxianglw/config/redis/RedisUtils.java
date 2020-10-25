@@ -1,13 +1,14 @@
 package com.yuxianglw.config.redis;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 @Component
 public class RedisUtils {
@@ -520,6 +521,20 @@ public class RedisUtils {
 	            return false;
 	        }
 	    }
+	/**
+	 * 根据索引修改list中的某条数据
+	 * @return
+	 */
+	public boolean removeAll() {
+		try {
+			Set<String> keys = redisTemplate.keys("*");
+			redisTemplate.delete(keys);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	    /**
 	     * 移除N个值为value
 	     * @param key 键
