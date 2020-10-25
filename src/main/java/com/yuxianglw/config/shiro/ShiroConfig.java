@@ -1,5 +1,6 @@
 package com.yuxianglw.config.shiro;
 
+import com.yuxianglw.common.CommonConstant;
 import com.yuxianglw.config.jwt.JWTFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -11,11 +12,11 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +35,9 @@ public class ShiroConfig {
 		//开启权限认证缓存
 		userRealm.setCachingEnabled(true);
 		userRealm.setAuthenticationCachingEnabled(true);
-		userRealm.setAuthenticationCacheName("AuthenticationCache");
+		userRealm.setAuthenticationCacheName(CommonConstant.AUTHENTICATIONCACHE);
 		userRealm.setAuthorizationCachingEnabled(true);
-		userRealm.setAuthorizationCacheName("AuthorizationCache");
+		userRealm.setAuthorizationCacheName(CommonConstant.AUTHORIZATIONCACHE);
 		return userRealm;
 	}
 
@@ -121,6 +122,8 @@ public class ShiroConfig {
 	public RedisCacheManager redisCacheManager(RedisManager redisManager){
 		RedisCacheManager redisCacheManager = new RedisCacheManager();
 		redisCacheManager.setRedisManager(redisManager);
+		//用户权限信息缓存时间
+		redisCacheManager.setExpire(200000);
 		return redisCacheManager;
 	}
 

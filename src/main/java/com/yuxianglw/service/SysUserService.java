@@ -31,4 +31,10 @@ public interface SysUserService extends IService<SysUser> {
      */
     String login(String username, String password);
 
+    /**
+     * 退出
+     * @return
+     */
+    Result<?> loginout();
+
 }

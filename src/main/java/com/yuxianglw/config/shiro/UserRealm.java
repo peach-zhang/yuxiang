@@ -100,5 +100,22 @@ public class UserRealm extends AuthorizingRealm {
 		return new SimpleAuthenticationInfo(sysUser, token, getName());
 	}
 
+	/**
+	 * 重写方法,清除当前用户的的 授权缓存
+	 * @param principals
+	 */
+	@Override
+	public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+		super.clearCachedAuthorizationInfo(principals);
+	}
+
+	/**
+	 * 重写方法，清除当前用户的 认证缓存
+	 * @param principals
+	 */
+	@Override
+	public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
+		super.clearCachedAuthenticationInfo(principals);
+	}
 
 }

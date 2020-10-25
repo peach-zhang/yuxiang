@@ -20,20 +20,11 @@ public enum  ErrorCodeEnum implements BaseCodeInterface {
     NOT_FOUND(404, "未找到该资源!"),
     INTERNAL_SERVER_ERROR(500, "服务器内部错误!"),
     SERVER_BUSY(503,"服务器正忙，请稍后再试!"),
-    //用户相关：10000**
-    USER_ACCOUNT_NOT_FOUND(10001, "账号不存在!"),
-    LOGIN_NO_TOKEN(50001, "Token无效，您无权访问该接口!"),
-    DoNotAllowToDisableTheCurrentUser(10002,"不允许禁用当前用户"),
-    //业务异常
-    PRODUCT_IS_REMOVE(30001,"物资已移入回收站"),
-    PRODUCT_NOT_FOUND(30002,"物资找不到"),
-    PRODUCT_WAIT_PASS(30003,"物资等待审核"),
-    PRODUCT_STATUS_ERROR(30004,"物资状态错误"),
-    PRODUCT_IN_STOCK_NUMBER_ERROR(30005,"物资入库数量非法"),
-    PRODUCT_OUT_STOCK_NUMBER_ERROR(30008,"物资发放数量非法"),
-    PRODUCT_IN_STOCK_EMPTY(30006,"物资入库不能为空"),
-    PRODUCT_OUT_STOCK_EMPTY(30007,"物资发放不能为空"),
-    PRODUCT_STOCK_ERROR(30009,"物资库存不足");
+    //用户相关
+    USER_ACCOUNT_NOT_FOUND(50001, "账号不存在!"),
+    LOGIN_NO_TOKEN(50002, "Token无效，您无权访问该接口!"),
+    DISALLOW_CURRENT_USER(10003,"不允许禁用当前用户"),
+    LOGIN_OUT_FAIL(50004,"退出失败");
     /** 错误码 */
     private int resultCode;
 

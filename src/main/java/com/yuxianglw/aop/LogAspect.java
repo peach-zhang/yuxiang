@@ -5,6 +5,8 @@ import com.yuxianglw.entity.SysLog;
 import com.yuxianglw.service.SysLogService;
 import com.yuxianglw.utlis.HttpContextUtils;
 import com.yuxianglw.utlis.IpUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-
+@Slf4j
 @Aspect
 @Component
 public class LogAspect {
@@ -34,8 +36,38 @@ public class LogAspect {
     * @description  在连接点执行之前执行的通知
     */
     @Before("BrokerPointcut()")
-    public void doBefore(){
-        System.out.println("在连接点执行之前执行的通知！");
+    public void doBefore(JoinPoint joinPoint){
+
+        try {
+            //保存日志
+            SysLog sysLog = new SysLog();
+            //日志类型
+            sysLog.setType("user_requst");
+            //从切面织入点处通过反射机制获取织入点处的方法
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            //获取切入点所在的方法
+            Method method = signature.getMethod();
+            //获取请求的类名
+            String className = joinPoint.getTarget().getClass().getName();
+            //获取请求的方法名
+            String methodName = method.getName();
+            //如果是退出记录日志
+            if(StringUtils.equals("loginout",methodName)){
+                sysLog.setMethod(className + "." + methodName);
+                //请求的参数
+                Object[] args = joinPoint.getArgs();
+                //将参数所在的数组转换成json
+                String params = JSON.toJSONString(args);
+                sysLog.setParam(params);
+                //获取用户ip地址
+                HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+                sysLog.setIp(IpUtils.getIpAddr(request));
+                //调用service保存SysLog实体类到数据库
+                sysLogService.save(sysLog);
+            }
+        } catch (Exception e) {
+            log.error("记录日志失败 {}",e);
+        }
     }
 
     /**
@@ -51,32 +83,40 @@ public class LogAspect {
      */
     @AfterReturning(pointcut = "BrokerPointcut()",returning = "result")
     public void doAfterReturning(JoinPoint joinPoint,Object result){
-        //保存日志
-        SysLog sysLog = new SysLog();
-        //日志类型
-        sysLog.setType("user_requst");
-        //从切面织入点处通过反射机制获取织入点处的方法
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        //获取切入点所在的方法
-        Method method = signature.getMethod();
-        //获取请求的类名
-        String className = joinPoint.getTarget().getClass().getName();
-        //获取请求的方法名
-        String methodName = method.getName();
-        sysLog.setMethod(className + "." + methodName);
-        //请求的参数
-        Object[] args = joinPoint.getArgs();
-        //将参数所在的数组转换成json
-        String params = JSON.toJSONString(args);
-        sysLog.setParam(params);
-        //返回值
-        String results = JSON.toJSONString(result);
-        sysLog.setResult(results);
-        //获取用户ip地址
-        HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
-        sysLog.setIp(IpUtils.getIpAddr(request));
-        //调用service保存SysLog实体类到数据库
-        sysLogService.save(sysLog);
+        try {
+            //保存日志
+            SysLog sysLog = new SysLog();
+            //日志类型
+            sysLog.setType("user_requst");
+            //从切面织入点处通过反射机制获取织入点处的方法
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            //获取切入点所在的方法
+            Method method = signature.getMethod();
+            //获取请求的类名
+            String className = joinPoint.getTarget().getClass().getName();
+            //获取请求的方法名
+            String methodName = method.getName();
+            //如果是退出不记录日志
+            if(StringUtils.equals("loginout",methodName)){
+                return;
+            }
+            sysLog.setMethod(className + "." + methodName);
+            //请求的参数
+            Object[] args = joinPoint.getArgs();
+            //将参数所在的数组转换成json
+            String params = JSON.toJSONString(args);
+            sysLog.setParam(params);
+            //返回值
+            String results = JSON.toJSONString(result);
+            sysLog.setResult(results);
+            //获取用户ip地址
+            HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+            sysLog.setIp(IpUtils.getIpAddr(request));
+            //调用service保存SysLog实体类到数据库
+            sysLogService.save(sysLog);
+        } catch (Exception e) {
+           log.error("保存日志错误 {}",e);
+        }
     }
 
     /**

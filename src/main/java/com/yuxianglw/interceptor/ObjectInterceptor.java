@@ -1,11 +1,14 @@
 package com.yuxianglw.interceptor;
 
 import com.yuxianglw.common.CommonConstant;
+import com.yuxianglw.entity.SysUser;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.util.ThreadContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -22,8 +25,6 @@ import java.util.Properties;
 @Component
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class ObjectInterceptor implements Interceptor {
-
-        //final SysUser sysUser = (SysUser)SecurityUtils.getSubject().getPrincipal();
 
         @Override
         public Object intercept(final Invocation invocation) throws Exception {
@@ -62,19 +63,21 @@ public class ObjectInterceptor implements Interceptor {
          * @return 返回执行结果
          */
         private Object executeInsert(final Executor executor, final MappedStatement ms, final Object paramObj) throws Exception {
+            //获取当前登录人
+            final SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
             final Field[] fields = paramObj.getClass().getDeclaredFields();
             for (final Field field : fields) {
                 field.setAccessible(true);
                 final String fieldName = field.getName();
                 switch (fieldName) {
                     case "createdBy":
-                        field.set(paramObj, "zhangtao");
+                        field.set(paramObj, sysUser.getUserName());
                         break;
                     case "createdTime":
                         field.set(paramObj, LocalDateTime.now());
                         break;
                     case "updatedBy":
-                        field.set(paramObj, "zhangtao");
+                        field.set(paramObj, sysUser.getUserName());
                         break;
                     case "updatedTime":
                         field.set(paramObj, LocalDateTime.now());
@@ -96,6 +99,8 @@ public class ObjectInterceptor implements Interceptor {
          */
         private Object executeUpdate(final Executor executor, final MappedStatement ms, final Object paramObj) throws Exception {
             if (paramObj instanceof MapperMethod.ParamMap) {
+                //获取当前登录人
+                final SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
                 final MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) paramObj;
                 for (final Object entity : paramMap.values()) {
                     final Field[] fields = entity.getClass().getDeclaredFields();
@@ -104,7 +109,7 @@ public class ObjectInterceptor implements Interceptor {
                         final String fieldName = field.getName();
                         switch (fieldName) {
                             case "updatedBy":
-                                field.set(entity, "zhangtao");
+                                field.set(entity, sysUser.getUserName());
                                 break;
                             case "updatedTime":
                                 field.set(entity, LocalDateTime.now());
