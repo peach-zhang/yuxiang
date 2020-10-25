@@ -16,5 +16,13 @@
         <result column="UPDATED_BY" property="updatedBy" />
         <result column="UPDATED_TIME" property="updatedTime" />
     </resultMap>
+    <!--根据父类id 查询菜单-->
+    <select id="queryMenuByParent" resultMap="BaseResultMap" parameterType="string">
+        SELECT * FROM SYS_MENU WHERE PARENT = #{parendId}
+    </select>
+    <!--获取父级菜单-->
+    <select id="queryParentMenu" resultType="com.yuxianglw.entity.SysMenu">
+        SELECT * FROM SYS_MENU WHERE PARENT IS null
+    </select>
 
 </mapper>

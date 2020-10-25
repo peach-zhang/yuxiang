@@ -31,10 +31,8 @@ public class SysMenuController {
     private SysMenuService sysMenuService;
 
     @GetMapping("/menu")
-    @Cacheable(value = "menu")
     public Result<?> getMenu(){
-        List<SysMenu> menu = sysMenuService.list();
-        return Result.ok(menu);
+        return sysMenuService.queryMenuByUser();
     }
 }
 
