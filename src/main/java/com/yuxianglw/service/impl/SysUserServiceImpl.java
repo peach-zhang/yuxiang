@@ -1,6 +1,5 @@
 package com.yuxianglw.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.common.CommonConstant;
 import com.yuxianglw.common.ErrorCodeEnum;
@@ -14,9 +13,6 @@ import com.yuxianglw.utlis.JWTUtils;
 import com.yuxianglw.utlis.MD5Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.cache.Cache;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.crazycake.shiro.RedisCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +31,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private  SysUserMapper sysUserMapper;
-
-    @Autowired
-    private RedisCacheManager redisCacheManager;
 
     @Override
     public Result<?> deleteUserById(String id) {
@@ -77,12 +70,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public Result<?> loginout() {
+    public Result<?> logout() {
         try {
-            PrincipalCollection previousPrincipals = SecurityUtils.getSubject().getPrincipals();
-            Cache<Object, Object> cache = redisCacheManager.getCache(CommonConstant.AUTHENTICATIONCACHE);
-            System.err.println(JSON.toJSONString(cache));
-            redisCacheManager.getCache(CommonConstant.AUTHORIZATIONCACHE).remove(previousPrincipals);
             SecurityUtils.getSubject().logout();
         }catch (Exception e){
           throw new ServiceException(ErrorCodeEnum.LOGIN_OUT_FAIL);

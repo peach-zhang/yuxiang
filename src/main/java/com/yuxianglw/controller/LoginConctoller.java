@@ -26,9 +26,9 @@ public class LoginConctoller {
         String token = sysUserService.login(loginUser.getUserName(), loginUser.getPassWord());
         return Result.ok((Object)token);
     }
-    @GetMapping("/loginout")
-    public Result<?> loginout(){
-        return sysUserService.loginout();
+    @GetMapping("/logout")
+    public Result<?> logout(){
+        return sysUserService.logout();
     }
 
 }

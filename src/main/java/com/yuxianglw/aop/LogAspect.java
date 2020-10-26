@@ -52,7 +52,7 @@ public class LogAspect {
             //获取请求的方法名
             String methodName = method.getName();
             //如果是退出记录日志
-            if(StringUtils.equals("loginout",methodName)){
+            if(StringUtils.equals("logout",methodName)){
                 sysLog.setMethod(className + "." + methodName);
                 //请求的参数
                 Object[] args = joinPoint.getArgs();
@@ -97,7 +97,7 @@ public class LogAspect {
             //获取请求的方法名
             String methodName = method.getName();
             //如果是退出不记录日志
-            if(StringUtils.equals("loginout",methodName)){
+            if(StringUtils.equals("logout",methodName)){
                 return;
             }
             sysLog.setMethod(className + "." + methodName);

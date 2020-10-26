@@ -35,6 +35,6 @@ public interface SysUserService extends IService<SysUser> {
      * 退出
      * @return
      */
-    Result<?> loginout();
+    Result<?> logout();
 
 }
