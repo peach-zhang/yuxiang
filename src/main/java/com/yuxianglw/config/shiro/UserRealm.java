@@ -4,6 +4,7 @@ package com.yuxianglw.config.shiro;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yuxianglw.common.CommonEnum;
 import com.yuxianglw.config.jwt.JWTToken;
+import com.yuxianglw.config.redis.RedisUtils;
 import com.yuxianglw.entity.SysPermission;
 import com.yuxianglw.entity.SysRole;
 import com.yuxianglw.entity.SysUser;
@@ -22,6 +23,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -77,13 +79,13 @@ public class UserRealm extends AuthorizingRealm {
 		// 解密获得username，用于和数据库进行对比
 		String username = JWTUtils.getUsername(token);
 
-		if (username == null) {
+		if (StringUtils.isBlank(username)) {
 			throw new AuthenticationException(" token错误，请重新登入！");
 		}
 		SysUser sysUser = sysUserMapper.selectUserByName(username);
 
-		if (sysUser == null) {
-			throw new AccountException("账号不存在!");
+		if (Objects.isNull(sysUser)) {
+			throw new AccountException("用户不存在!");
 		}
 		if(JWTUtils.isExpire(token)){
 			throw new AuthenticationException(" token过期，请重新登入！");
@@ -109,13 +111,5 @@ public class UserRealm extends AuthorizingRealm {
 		super.clearCachedAuthorizationInfo(principals);
 	}
 
-	/**
-	 * 重写方法，清除当前用户的 认证缓存
-	 * @param principals
-	 */
-	@Override
-	public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
-		super.clearCachedAuthenticationInfo(principals);
-	}
 
 }

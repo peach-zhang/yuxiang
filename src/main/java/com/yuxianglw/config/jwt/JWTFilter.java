@@ -25,49 +25,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
 
     /**
-     * 认证之前执行该方法
-     * @param request
-     * @param response
-     * @param mappedValue
-     * @return
-     */
-    @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        Subject subject = SecurityUtils.getSubject();
-        return  null != subject && subject.isAuthenticated();
-    }
-
-    /**
-     * 认证未通过执行该方法
-     * @param request
-     * @param response
-     * @return
-     */
-    @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response){
-        //完成token登入
-        //1.检查请求头中是否含有token
-        HttpServletRequest httpServletRequest= (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader("Authorization");
-        //2. 如果客户端没有携带token，拦下请求
-        if(null==token||"".equals(token)){
-            responseTokenError(response,"Token无效，您无权访问该接口");
-            return false;
-        }
-        //3. 如果有，对进行进行token验证
-        JWTToken jwtToken = new JWTToken(token);
-        try {
-            SecurityUtils.getSubject().login(jwtToken);
-        } catch (AuthenticationException e) {
-            log.error(e.getMessage());
-            responseTokenError(response,e.getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * 对跨域提供支持
      */
     @Override
@@ -84,6 +41,52 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         }
         return super.preHandle(request, response);
     }
+
+    /**
+     * 执行登录认证
+     *
+     * @param request
+     * @param response
+     * @param mappedValue
+     * @return
+     */
+    @Override
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        try {
+            executeLogin(request, response);
+            return true;
+        } catch (Exception e) {
+            throw new AuthenticationException("Token失效，请重新登录", e);
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+        try {
+            //1.获取token 判断是否存在
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            String token = httpServletRequest.getHeader("Authorization");
+            //2. 如果客户端没有携带token，拦下请求
+            if(null==token||"".equals(token)){
+                responseTokenError(response,"Token无效，您无权访问该接口");
+                return false;
+            }
+            JWTToken jwtToken = new JWTToken(token);
+            // 提交给realm进行登入，如果错误他会抛出异常并被捕获
+            getSubject(request, response).login(jwtToken);
+            // 如果没有抛出异常则代表登入成功，返回true
+        } catch (AuthenticationException e) {
+            log.error("登录失败 {}",e);
+            responseTokenError(response,"登录失败");
+            return  false;
+        }
+        return true;
+    }
+
+
     /**
      * 无需转发，直接返回Response信息 Token认证错误
      */
