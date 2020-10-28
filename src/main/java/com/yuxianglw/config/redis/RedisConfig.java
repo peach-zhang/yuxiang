@@ -1,5 +1,6 @@
 package com.yuxianglw.config.redis;
 
+import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,9 +25,9 @@ public class RedisConfig {
 		RedisTemplate<String, String> template = new RedisTemplate<>();
 		template.setConnectionFactory(factory);
 		template.setKeySerializer(new StringRedisSerializer());
-		template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-		template.setHashKeySerializer(new GenericJackson2JsonRedisSerializer());
-		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setValueSerializer(new GenericFastJsonRedisSerializer());
+		template.setHashKeySerializer(new GenericFastJsonRedisSerializer());
+		template.setHashValueSerializer(new GenericFastJsonRedisSerializer());
 		template.afterPropertiesSet();
 		return template;
 	}
