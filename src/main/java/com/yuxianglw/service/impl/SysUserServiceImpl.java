@@ -74,7 +74,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         try {
             SecurityUtils.getSubject().logout();
         }catch (Exception e){
-          throw new ServiceException(ErrorCodeEnum.LOGIN_OUT_FAIL);
+            log.error("退出失败{}",e);
+            throw new ServiceException(ErrorCodeEnum.LOGIN_OUT_FAIL);
         }
         return Result.ok();
     }
