@@ -9,6 +9,7 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.crazycake.shiro.RedisCache;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -42,7 +43,7 @@ public class ShiroConfig {
 	}
 
 	@Bean("securityManager")
-	public DefaultWebSecurityManager defaultWebSecurityManager(UserRealm realm) {
+	public DefaultWebSecurityManager defaultWebSecurityManager(UserRealm realm,RedisCacheManager redisCacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		// 使用自定义realm
 		securityManager.setRealm(realm);
@@ -124,6 +125,7 @@ public class ShiroConfig {
 		redisCacheManager.setRedisManager(redisManager);
 		//用户权限信息缓存时间
 		redisCacheManager.setExpire(200000);
+		redisCacheManager.setPrincipalIdFieldName("id");
 		return redisCacheManager;
 	}
 

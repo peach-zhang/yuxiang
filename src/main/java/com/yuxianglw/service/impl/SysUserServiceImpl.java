@@ -16,6 +16,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -48,15 +50,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public String login(String username, String password) {
+    public Map<String,String> login(String username, String password) {
         String token;
         SysUser sysUser = sysUserMapper.selectUserByName(username);
+        Map<String,String> data = new HashMap<>();
         if (sysUser != null) {
+            data.put("realName",sysUser.getRealName());
             String salt = sysUser.getSalt();
             //秘钥为盐
             String target = MD5Utils.md5Encryption(password, salt);
             //生成Token
             token = JWTUtils.sign(username, target);
+            data.put("token",token);
             JWTToken jwtToken = new JWTToken(token);
             try {
                 SecurityUtils.getSubject().login(jwtToken);
@@ -66,7 +71,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         } else {
             throw new ServiceException(ErrorCodeEnum.USER_ACCOUNT_NOT_FOUND);
         }
-        return token;
+        return data;
     }
 
     @Override

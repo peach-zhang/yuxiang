@@ -8,6 +8,8 @@ import org.apache.shiro.util.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * <p>
  * 登录接口
@@ -25,8 +27,8 @@ public class LoginConctoller {
 
     @PostMapping("/login")
     public Result<?> login(@RequestBody LoginUser loginUser){
-        String token = sysUserService.login(loginUser.getUserName(), loginUser.getPassWord());
-        return Result.ok((Object)token);
+        Map<String,String> data = sysUserService.login(loginUser.getUserName(), loginUser.getPassWord());
+        return Result.ok(data);
     }
     @GetMapping("/logout")
     public Result<?> logout(){

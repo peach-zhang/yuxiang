@@ -5,6 +5,8 @@ import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
+
 /**
  * <p>
  * 系统用户 服务类
@@ -29,7 +31,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param password
      * @return
      */
-    String login(String username, String password);
+    Map<String,String> login(String username, String password);
 
     /**
      * 退出
