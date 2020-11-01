@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface SysBackgroundImageService extends IService<SysBackgroundImage> {
 
-   @Cacheable("getBackgroundImage")
+   @Cacheable("BackgroundImage")
    List<SysBackgroundImage> getBackgroundImageList();
 
 }
