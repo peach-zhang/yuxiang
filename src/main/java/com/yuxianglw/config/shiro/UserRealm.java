@@ -4,6 +4,8 @@ package com.yuxianglw.config.shiro;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yuxianglw.common.CommonConstant;
 import com.yuxianglw.common.CommonEnum;
+import com.yuxianglw.common.ErrorCodeEnum;
+import com.yuxianglw.common.ServiceException;
 import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.config.redis.RedisUtils;
 import com.yuxianglw.entity.SysPermission;
@@ -95,26 +97,26 @@ public class UserRealm extends AuthorizingRealm {
 		String username = JWTUtils.getUsername(token);
 
 		if (StringUtils.isBlank(username)) {
-			throw new AuthenticationException(" token错误，请重新登入！");
+			throw new AuthenticationException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 		SysUser sysUser = sysUserMapper.selectUserByName(username);
 
 		if (Objects.isNull(sysUser)) {
-			throw new AccountException("用户不存在!");
+			throw new AccountException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 		if(JWTUtils.isExpire(token)){
-			throw new AuthenticationException(" token过期，请重新登入！");
+			throw new AuthenticationException(ErrorCodeEnum.EXPIRED_TOKEN.getResultMsg());
 		}
 
 		if (!JWTUtils.verify(token, username, sysUser.getPassWord())) {
-			throw new CredentialsException("密码错误!");
+			throw new CredentialsException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 
 		if(StringUtils.equals(sysUser.getStatus(), CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
 			throw new LockedAccountException(CommonEnum.ACCOUNT_NUMBER_LOCK.getMsg());
 		}
 		//保存用户信息
-		redisUtils.set(username,sysUser);
+		redisUtils.set(username+":user",sysUser);
 		return new SimpleAuthenticationInfo(username, token, getName());
 	}
 
@@ -125,7 +127,8 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	public void clearCache(PrincipalCollection principals) {
 		String username = (String) principals.getPrimaryPrincipal();
-		redisUtils.del(username);
+		redisUtils.del(username+":user");
+		redisUtils.del(username + ":token");
 		super.clearCache(principals);
 	}
 

@@ -8,6 +8,7 @@ import com.yuxianglw.common.ErrorCodeEnum;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.common.ServiceException;
 import com.yuxianglw.config.jwt.JWTToken;
+import com.yuxianglw.config.redis.RedisUtils;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysUserService;
@@ -37,6 +38,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private  SysUserMapper sysUserMapper;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     @Override
     public Result<?> deleteUserById(String id) {
         SysUser sysUser = sysUserMapper.selectById(id);
@@ -59,6 +63,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         Map<String,String> data = new HashMap<>();
         if (sysUser != null) {
             data.put("realName",sysUser.getRealName());
+            token = (String)redisUtils.get(sysUser.getUserName() + ":token");
+            if(StringUtils.isNotBlank(token)){
+                JWTToken jwtToken = new JWTToken(token);
+                SecurityUtils.getSubject().login(jwtToken);
+                data.put("token",token);
+                return data;
+            }
             String salt = sysUser.getSalt();
             //秘钥为盐
             String target = MD5Utils.md5Encryption(password, salt);
@@ -66,13 +77,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             token = JWTUtils.sign(username, target);
             data.put("token",token);
             JWTToken jwtToken = new JWTToken(token);
-            try {
-                SecurityUtils.getSubject().login(jwtToken);
-            } catch (AuthenticationException e) {
-                throw new ServiceException(e.getMessage());
-            }
+            SecurityUtils.getSubject().login(jwtToken);
+            redisUtils.set(sysUser.getUserName() + ":token",token);
         } else {
-            throw new ServiceException(ErrorCodeEnum.USER_ACCOUNT_NOT_FOUND);
+            throw new ServiceException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND);
         }
         return data;
     }

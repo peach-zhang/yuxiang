@@ -3,6 +3,7 @@ package com.yuxianglw.service;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysBackgroundImage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -16,8 +17,7 @@ import java.util.List;
  */
 public interface SysBackgroundImageService extends IService<SysBackgroundImage> {
 
-   Result<?> getBackgroundImage();
-
+   @Cacheable("getBackgroundImage")
    List<SysBackgroundImage> getBackgroundImageList();
 
 }

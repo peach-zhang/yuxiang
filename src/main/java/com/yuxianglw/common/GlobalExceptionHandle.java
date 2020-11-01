@@ -25,6 +25,6 @@ public class GlobalExceptionHandle<T> {
 
     @ExceptionHandler(Exception.class)
     public Result sendErrorResponseSystem(Exception exception){
-        return Result.error("系统错误");
+        return Result.error(exception.getMessage());
     }
 }

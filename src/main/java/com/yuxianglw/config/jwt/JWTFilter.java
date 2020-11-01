@@ -80,7 +80,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             // 如果没有抛出异常则代表登入成功，返回true
         } catch (AuthenticationException e) {
             log.error("登录失败 {}",e);
-            responseTokenError(response,"登录失败");
+            responseTokenError(response,e.getMessage());
             return  false;
         }
         return true;
