@@ -53,7 +53,7 @@ public class CodeGeneration {
         // 表名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 需要生成的表
-        strategy.setInclude(new String[] { "SYS_MENU" });
+        strategy.setInclude(new String[] { "SYS_BACKGROUND_IMAGE" });
         // 自动lombok
         strategy.setEntityLombokModel(true);
         //逻辑删除标识字段

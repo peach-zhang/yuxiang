@@ -64,20 +64,20 @@ public class ObjectInterceptor implements Interceptor {
          */
         private Object executeInsert(final Executor executor, final MappedStatement ms, final Object paramObj) throws Exception {
             //获取当前登录人
-            final SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+            final String username = (String) SecurityUtils.getSubject().getPrincipal();
             final Field[] fields = paramObj.getClass().getDeclaredFields();
             for (final Field field : fields) {
                 field.setAccessible(true);
                 final String fieldName = field.getName();
                 switch (fieldName) {
                     case "createdBy":
-                        field.set(paramObj, sysUser.getUserName());
+                        field.set(paramObj, username);
                         break;
                     case "createdTime":
                         field.set(paramObj, LocalDateTime.now());
                         break;
                     case "updatedBy":
-                        field.set(paramObj, sysUser.getUserName());
+                        field.set(paramObj, username);
                         break;
                     case "updatedTime":
                         field.set(paramObj, LocalDateTime.now());
@@ -100,7 +100,7 @@ public class ObjectInterceptor implements Interceptor {
         private Object executeUpdate(final Executor executor, final MappedStatement ms, final Object paramObj) throws Exception {
             if (paramObj instanceof MapperMethod.ParamMap) {
                 //获取当前登录人
-                final SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+                final String username = (String) SecurityUtils.getSubject().getPrincipal();
                 final MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) paramObj;
                 for (final Object entity : paramMap.values()) {
                     final Field[] fields = entity.getClass().getDeclaredFields();
@@ -109,7 +109,7 @@ public class ObjectInterceptor implements Interceptor {
                         final String fieldName = field.getName();
                         switch (fieldName) {
                             case "updatedBy":
-                                field.set(entity, sysUser.getUserName());
+                                field.set(entity, username);
                                 break;
                             case "updatedTime":
                                 field.set(entity, LocalDateTime.now());

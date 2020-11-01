@@ -39,4 +39,11 @@ public interface SysUserService extends IService<SysUser> {
      */
     Result<?> logout();
 
+    /*
+     *获取用户列表
+     *
+     */
+    public Result<?> queryUser(String username,String phone,int pagenum, int pagesize);
+
+
 }

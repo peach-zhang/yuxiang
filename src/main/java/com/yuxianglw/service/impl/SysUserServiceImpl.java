@@ -1,5 +1,7 @@
 package com.yuxianglw.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.common.CommonConstant;
 import com.yuxianglw.common.ErrorCodeEnum;
@@ -11,6 +13,7 @@ import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysUserService;
 import com.yuxianglw.utlis.JWTUtils;
 import com.yuxianglw.utlis.MD5Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +86,22 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ServiceException(ErrorCodeEnum.LOGIN_OUT_FAIL);
         }
         return Result.ok();
+    }
+
+    @Override
+    public Result<?> queryUser(String username, String phone, int pagenum, int pagesize) {
+        QueryWrapper<SysUser> wapper = new QueryWrapper<>();
+        if(StringUtils.isNoneBlank(username)) {wapper.eq("USER_NAME",username);}
+        if(StringUtils.isNoneBlank(username)) {wapper.eq("PHONE",phone);}
+        Integer integer = sysUserMapper.selectCount(wapper);
+        Page<SysUser> sysUserPage = new Page<>();
+        sysUserPage.setSize(pagesize).setCurrent(pagenum);
+        if(Objects.nonNull(integer) && integer>0){
+            sysUserPage.setTotal(integer);
+            sysUserPage= sysUserMapper.selectPage(sysUserPage, wapper);
+            return Result.ok(sysUserPage);
+        }
+        return Result.ok(sysUserPage);
     }
 
 }

@@ -1,8 +1,14 @@
 package com.yuxianglw.config.jwt;
 
+import com.yuxianglw.utlis.JWTUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 
+/**
+ * @author zhangtao
+ */
 public class JWTToken implements AuthenticationToken {
+
+    private static final long serialVersionUID = 1L;
 
     // 密钥
     private String token;
@@ -13,7 +19,7 @@ public class JWTToken implements AuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return token;
+        return JWTUtils.getUsername(token);
     }
 
     @Override

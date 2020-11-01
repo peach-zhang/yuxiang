@@ -28,20 +28,6 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-	@Bean
-	public UserRealm userRealm(RedisCacheManager redisCacheManager){
-		UserRealm userRealm = new UserRealm();
-		//设置cachemanager
-		userRealm.setCacheManager(redisCacheManager);
-		//开启权限认证缓存
-		userRealm.setCachingEnabled(true);
-		userRealm.setAuthenticationCachingEnabled(true);
-		userRealm.setAuthenticationCacheName(CommonConstant.AUTHENTICATIONCACHE);
-		userRealm.setAuthorizationCachingEnabled(true);
-		userRealm.setAuthorizationCacheName(CommonConstant.AUTHORIZATIONCACHE);
-		return userRealm;
-	}
-
 	@Bean("securityManager")
 	public DefaultWebSecurityManager defaultWebSecurityManager(UserRealm realm,RedisCacheManager redisCacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -53,6 +39,7 @@ public class ShiroConfig {
 		defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
 		subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
 		securityManager.setSubjectDAO(subjectDAO);
+		securityManager.setCacheManager(redisCacheManager);
 		ThreadContext.bind(securityManager);
 		return securityManager;
 	}
@@ -75,6 +62,7 @@ public class ShiroConfig {
 		filterRuleMap.put("/**", "jwt");
 		// 访问401和404页面不通过我们的Filter
 		filterRuleMap.put("/yuxianglw/login", "anon");
+		filterRuleMap.put("/yuxianglw/sysBackgroundImage/getBackgroundImage", "anon");
 		//开放API文档接口
 //		filterRuleMap.put("/swagger-ui.html", "anon");
 //		filterRuleMap.put("/webjars/**","anon");

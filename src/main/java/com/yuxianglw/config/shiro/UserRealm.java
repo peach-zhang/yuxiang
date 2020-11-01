@@ -2,6 +2,7 @@ package com.yuxianglw.config.shiro;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yuxianglw.common.CommonConstant;
 import com.yuxianglw.common.CommonEnum;
 import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.config.redis.RedisUtils;
@@ -21,6 +22,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
  * @author zhangtao
  *
  */
+@Component
 public class UserRealm extends AuthorizingRealm {
 
 	@Autowired
@@ -41,6 +44,18 @@ public class UserRealm extends AuthorizingRealm {
 
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+
+	@Autowired
+	private RedisUtils redisUtils;
+
+	public UserRealm() {
+		//开启权限认证缓存
+		super.setCachingEnabled(true);
+		super.setAuthenticationCachingEnabled(true);
+		super.setAuthenticationCacheName(CommonConstant.AUTHENTICATIONCACHE);
+		super.setAuthorizationCachingEnabled(true);
+		super.setAuthorizationCacheName(CommonConstant.AUTHORIZATIONCACHE);
+	}
 
 	/**
 	 * 大坑！，必须重写此方法，不然Shiro会报错
@@ -98,18 +113,20 @@ public class UserRealm extends AuthorizingRealm {
 		if(StringUtils.equals(sysUser.getStatus(), CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
 			throw new LockedAccountException(CommonEnum.ACCOUNT_NUMBER_LOCK.getMsg());
 		}
-
-		return new SimpleAuthenticationInfo(sysUser, token, getName());
+		//保存用户信息
+		redisUtils.set(username,sysUser);
+		return new SimpleAuthenticationInfo(username, token, getName());
 	}
 
 	/**
-	 * 重写方法,清除当前用户的的 授权缓存
-	 * @param principals
+	 * 清除当前用户的权限认证缓存
+	 * @param principals 权限信息
 	 */
 	@Override
-	public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
-		super.clearCachedAuthorizationInfo(principals);
+	public void clearCache(PrincipalCollection principals) {
+		String username = (String) principals.getPrimaryPrincipal();
+		redisUtils.del(username);
+		super.clearCache(principals);
 	}
-
 
 }
