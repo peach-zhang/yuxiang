@@ -41,5 +41,13 @@ public class SysUserController {
         return Result.ok(msg);
     }
 
+    @GetMapping("/queryUser")
+    public Result<?> queryUser( @RequestParam(value = "username",required = false) String username,
+                                @RequestParam(value = "phone",required = false) String phone,
+                                @RequestParam(value = "pagenum") int pagenum,
+                                @RequestParam(value = "pagesize") int pagesize){
+        return  sysUserService.queryUser(username,phone,pagenum,pagesize);
+    }
+
 }
 

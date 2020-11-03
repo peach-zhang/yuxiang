@@ -3,26 +3,24 @@ package com.yuxianglw.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yuxianglw.common.CommonConstant;
-import com.yuxianglw.common.ErrorCodeEnum;
-import com.yuxianglw.common.Result;
-import com.yuxianglw.common.ServiceException;
+import com.yuxianglw.common.*;
 import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.config.redis.RedisUtils;
 import com.yuxianglw.entity.SysUser;
+import com.yuxianglw.entity.dto.SysUserDTO;
 import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysUserService;
 import com.yuxianglw.utlis.JWTUtils;
 import com.yuxianglw.utlis.MD5Utils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -99,17 +97,62 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Result<?> queryUser(String username, String phone, int pagenum, int pagesize) {
         QueryWrapper<SysUser> wapper = new QueryWrapper<>();
-        if(StringUtils.isNoneBlank(username)) {wapper.eq("USER_NAME",username);}
-        if(StringUtils.isNoneBlank(username)) {wapper.eq("PHONE",phone);}
+        if(StringUtils.isNotBlank(username)) {wapper.eq("USER_NAME",username);}
+        if(StringUtils.isNotBlank(phone)) {wapper.eq("PHONE",phone);}
         Integer integer = sysUserMapper.selectCount(wapper);
         Page<SysUser> sysUserPage = new Page<>();
+        Page<SysUserDTO> sysUserDTOPage = new Page<>();
         sysUserPage.setSize(pagesize).setCurrent(pagenum);
+        List<SysUserDTO> sysUserDTOList= new ArrayList<>();
         if(Objects.nonNull(integer) && integer>0){
             sysUserPage.setTotal(integer);
             sysUserPage= sysUserMapper.selectPage(sysUserPage, wapper);
-            return Result.ok(sysUserPage);
+            //capy数据
+            BeanUtils.copyProperties(sysUserPage,sysUserDTOPage);
+            List<SysUser> records = sysUserPage.getRecords();
+            for (SysUser sysUser : records) {
+                SysUserDTO sysUserDTO = new SysUserDTO();
+                BeanUtils.copyProperties(sysUser,sysUserDTO);
+                SysUser CreatedBy = this.queryUserByName(sysUser.getCreatedBy());
+                if(Objects.nonNull(CreatedBy)){sysUserDTO.setCreatedBy(CreatedBy.getRealName());}
+                SysUser UpdatedBy = this.queryUserByName(sysUser.getUpdatedBy());
+                if(Objects.nonNull(UpdatedBy)){sysUserDTO.setUpdatedBy(UpdatedBy.getRealName());}
+                String status = this.statusAdapter(sysUserDTO.getStatus());
+                sysUserDTO.setStatus(status);
+                SysUser superiorUser = this.queryUserByid(sysUser.getSuperiorId());
+                if(Objects.nonNull(superiorUser)){sysUserDTO.setSuperiorName(superiorUser.getRealName());}
+                sysUserDTOList.add(sysUserDTO);
+            }
+            sysUserDTOPage.setRecords(sysUserDTOList);
+            return Result.ok(sysUserDTOPage);
         }
-        return Result.ok(sysUserPage);
+        return Result.ok(sysUserDTOPage);
+    }
+    /*根据名称获取用户*/
+    private SysUser queryUserByName(String userName){
+        if(StringUtils.isNotBlank(userName)){
+            QueryWrapper<SysUser> wapper = new QueryWrapper<>();
+            wapper.eq("USER_NAME",userName);
+            List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
+            if(CollectionUtils.isNotEmpty(sysUsers)){
+                return sysUsers.get(0);
+            }
+        }
+        return  null;
+    }
+    /*状态中英文转换*/
+    private String statusAdapter(String status){
+        if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode())){
+            return CommonEnum.ACCOUNT_NUMBER_ACTIVE.getStatus();
+        }else if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
+            return CommonEnum.ACCOUNT_NUMBER_LOCK.getStatus();
+        }
+        return null;
+    }
+
+    /*根据id 查询除上级*/
+    private SysUser queryUserByid(String id){
+        return  sysUserMapper.selectById(id);
     }
 
 }

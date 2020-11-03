@@ -35,12 +35,4 @@ public class LoginConctoller {
         return sysUserService.logout();
     }
 
-    @GetMapping("/queryUser")
-    public Result<?> queryUser( @RequestParam(value = "username",required = false) String username,
-                                @RequestParam(value = "phone",required = false) String phone,
-                                @RequestParam(value = "pagenum",defaultValue = "1") int pagenum,
-                                @RequestParam(value = "pagesize",defaultValue = "10") int pagesize){
-        return  sysUserService.queryUser(username,phone,pagenum,pagesize);
-    }
-
 }
