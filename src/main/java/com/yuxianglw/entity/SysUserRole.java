@@ -1,6 +1,7 @@
 package com.yuxianglw.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -64,6 +65,7 @@ public class SysUserRole implements Serializable {
      * 创建时间
      */
       @TableField("CREATED_TIME")
+      @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime createdTime;
 
       /**
@@ -76,6 +78,7 @@ public class SysUserRole implements Serializable {
      * 更新时间
      */
       @TableField("UPDATED_TIME")
+      @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime updatedTime;
 
 
