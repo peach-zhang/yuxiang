@@ -27,7 +27,7 @@ public class RedisConfig {
 
 	@Bean
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-//我们为了自己开发使用方便，一般使用<String, Object>类型
+		//我们为了自己开发使用方便，一般使用<String, Object>类型
 		RedisTemplate<String, Object> template = new RedisTemplate();
 		template.setConnectionFactory(factory);
 		//序列化配置

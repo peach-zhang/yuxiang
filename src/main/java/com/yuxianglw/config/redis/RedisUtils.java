@@ -19,7 +19,6 @@ public class RedisUtils {
 	    @Resource
 	    private RedisTemplate<String, Object> redisTemplate;
 
-
 	    public Set<String> keys(String keys){
 	        try {
 	            return redisTemplate.keys(keys);
