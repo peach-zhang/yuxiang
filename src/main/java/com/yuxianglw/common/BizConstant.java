@@ -13,9 +13,9 @@ public class BizConstant {
     //超级管理员
     public static final String SUPER_ADMINISTRATOR = "zhangsan";
     //不可禁止
-    public static final String NOT_FORBIDDEN = "超级管理员不可禁止！";
+    public static final String NOT_FORBIDDEN = "超级管理员不可锁定！";
     //不可禁止自己
-    public static final String DONT_BAN_YOURSELF = "不可禁止自己！";
+    public static final String DONT_BAN_YOURSELF = "不可锁定自己！";
     //操作成功
     public static final String SUCCESSFUL_OPERATION = "操作成功！";
     //认证缓存key
