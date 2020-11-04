@@ -19,6 +19,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -40,6 +42,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private RedisUtils redisUtils;
 
     @Override
+    @Transactional
     public Result<?> deleteUserById(String id) {
         SysUser sysUser = sysUserMapper.selectById(id);
         if(Objects.nonNull(sysUser)){
@@ -55,13 +58,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    @Transactional
     public Map<String,String> login(String username, String password) {
         String token;
         SysUser sysUser = sysUserMapper.selectUserByName(username);
         Map<String,String> data = new HashMap<>();
         if (sysUser != null) {
             data.put("realName",sysUser.getRealName());
-            token = (String)redisUtils.get(sysUser.getUserName() + ":token");
+            token = (String)redisUtils.get(sysUser.getUserName() + BizConstant.CACHE_TOKEN);
             if(StringUtils.isNotBlank(token)){
                 JWTToken jwtToken = new JWTToken(token);
                 SecurityUtils.getSubject().login(jwtToken);
@@ -76,7 +80,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             data.put("token",token);
             JWTToken jwtToken = new JWTToken(token);
             SecurityUtils.getSubject().login(jwtToken);
-            redisUtils.set(sysUser.getUserName() + ":token",token);
+            redisUtils.set(sysUser.getUserName() + BizConstant.CACHE_TOKEN,token);
         } else {
             throw new ServiceException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND);
         }
@@ -117,7 +121,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 if(Objects.nonNull(CreatedBy)){sysUserDTO.setCreatedBy(CreatedBy.getRealName());}
                 SysUser UpdatedBy = this.queryUserByName(sysUser.getUpdatedBy());
                 if(Objects.nonNull(UpdatedBy)){sysUserDTO.setUpdatedBy(UpdatedBy.getRealName());}
-                String status = this.statusAdapter(sysUserDTO.getStatus());
+                boolean status = this.statusAdapter(sysUser.getStatus());
                 sysUserDTO.setStatus(status);
                 SysUser superiorUser = this.queryUserByid(sysUser.getSuperiorId());
                 if(Objects.nonNull(superiorUser)){sysUserDTO.setSuperiorName(superiorUser.getRealName());}
@@ -128,6 +132,38 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         return Result.ok(sysUserDTOPage);
     }
+
+    @Override
+    @Transactional
+    public Result<?> editUserStatus(SysUserDTO sysUserDTO) {
+        if(Objects.isNull(sysUserDTO)){return Result.error(BizConstant.PARAMETER_IS_EMPTY);};
+        String id = sysUserDTO.getId();
+        boolean status =sysUserDTO.getStatus();
+        if(StringUtils.isBlank(id) || Objects.isNull(status)){
+            return Result.error(BizConstant.PARAMETER_IS_EMPTY);
+        }
+        SysUser sysUser = sysUserMapper.selectById(id);
+        //判断用户是否为空
+        if(Objects.isNull(sysUser)){
+            return Result.error(BizConstant.NO_CORRESPONDING_USER);
+        }
+        //判断是否是自己
+        String username = (String)SecurityUtils.getSubject().getPrincipal();
+        if(StringUtils.equals(username,sysUser.getUserName())){
+            return Result.error(BizConstant.DONT_BAN_YOURSELF);
+        }
+        //超级管理员不可以禁止
+        if(StringUtils.equals(sysUser.getUserName(),BizConstant.SUPER_ADMINISTRATOR)){
+            return Result.error(BizConstant.NOT_FORBIDDEN);
+        }
+        //状态转换和设置状态
+        String _status = status?CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode():CommonEnum.ACCOUNT_NUMBER_LOCK.getCode();
+        sysUser.setStatus(_status);
+        sysUserMapper.updateById(sysUser);
+        this.clearUserCache(sysUser);
+        return Result.ok(BizConstant.SUCCESSFUL_OPERATION);
+    }
+
     /*根据名称获取用户*/
     private SysUser queryUserByName(String userName){
         if(StringUtils.isNotBlank(userName)){
@@ -141,13 +177,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return  null;
     }
     /*状态中英文转换*/
-    private String statusAdapter(String status){
+    private boolean statusAdapter(String status){
         if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode())){
-            return CommonEnum.ACCOUNT_NUMBER_ACTIVE.getStatus();
+            return true;
         }else if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
-            return CommonEnum.ACCOUNT_NUMBER_LOCK.getStatus();
+            return false;
         }
-        return null;
+        return false;
     }
 
     /*根据id 查询除上级*/
@@ -155,4 +191,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return  sysUserMapper.selectById(id);
     }
 
+    /*清除用户的缓存*/
+    @Override
+    public void clearUserCache(SysUser sysUser){
+        //清除用户缓存
+        redisUtils.del(sysUser.getUserName()+BizConstant.CACHE_USER);
+        //清除token缓存
+        redisUtils.del(sysUser.getUserName()+BizConstant.CACHE_TOKEN);
+        //清除认证信息
+        redisUtils.del(BizConstant.AUTHENTICATION_CACHE+sysUser.getUserName());
+        //清除授权信息
+        redisUtils.del(BizConstant.AUTHORIZATION_CACHE+sysUser.getUserName());
+    }
 }

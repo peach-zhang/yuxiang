@@ -3,11 +3,11 @@ package com.yuxianglw.common;
 public class CommonConstant {
 
     /**
-     * 授权
+     * 认证
      */
     public static final String AUTHENTICATIONCACHE = "AuthenticationCache";
     /**
-     * 认证
+     * 授权
      */
     public static final String AUTHORIZATIONCACHE = "AuthorizationCache";
 

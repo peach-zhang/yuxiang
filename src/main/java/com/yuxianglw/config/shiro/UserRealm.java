@@ -2,10 +2,7 @@ package com.yuxianglw.config.shiro;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yuxianglw.common.CommonConstant;
-import com.yuxianglw.common.CommonEnum;
-import com.yuxianglw.common.ErrorCodeEnum;
-import com.yuxianglw.common.ServiceException;
+import com.yuxianglw.common.*;
 import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.config.redis.RedisUtils;
 import com.yuxianglw.entity.SysPermission;
@@ -116,7 +113,7 @@ public class UserRealm extends AuthorizingRealm {
 			throw new LockedAccountException(CommonEnum.ACCOUNT_NUMBER_LOCK.getMsg());
 		}
 		//保存用户信息
-		redisUtils.set(username+":user",sysUser);
+		redisUtils.set(username + BizConstant.CACHE_USER,sysUser);
 		return new SimpleAuthenticationInfo(username, token, getName());
 	}
 
@@ -127,8 +124,8 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	public void clearCache(PrincipalCollection principals) {
 		String username = (String) principals.getPrimaryPrincipal();
-		redisUtils.del(username+":user");
-		redisUtils.del(username + ":token");
+		redisUtils.del(username + BizConstant.CACHE_USER);
+		redisUtils.del(username + BizConstant.CACHE_TOKEN);
 		super.clearCache(principals);
 	}
 

@@ -3,9 +3,12 @@ package com.yuxianglw.controller;
 
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
+import com.yuxianglw.entity.dto.SysUserDTO;
 import com.yuxianglw.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -47,6 +50,11 @@ public class SysUserController {
                                 @RequestParam(value = "pagenum") int pagenum,
                                 @RequestParam(value = "pagesize") int pagesize){
         return  sysUserService.queryUser(username,phone,pagenum,pagesize);
+    }
+
+    @PutMapping("/changeStatus")
+    public Result<?> editUserStatus(@RequestBody SysUserDTO sysUserDTO){
+        return sysUserService.editUserStatus(sysUserDTO);
     }
 
 }

@@ -1,15 +1,13 @@
 package com.yuxianglw.entity.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * @author zhangtao
+ */
 @Data
 public class SysUserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -51,7 +49,7 @@ public class SysUserDTO implements Serializable {
     /**
      * 状态
      */
-    private String status;
+    private Boolean status;
 
     /**
      * 创建人

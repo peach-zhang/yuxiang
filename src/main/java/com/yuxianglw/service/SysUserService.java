@@ -3,6 +3,7 @@ package com.yuxianglw.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
+import com.yuxianglw.entity.dto.SysUserDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
@@ -43,7 +44,17 @@ public interface SysUserService extends IService<SysUser> {
      *获取用户列表
      *
      */
-    public Result<?> queryUser(String username,String phone,int pagenum, int pagesize);
+    Result<?> queryUser(String username,String phone,int pagenum, int pagesize);
 
+    /*
+     *修改用户的状态
+     *
+     */
+    Result<?> editUserStatus(SysUserDTO sysUserDTO);
 
+    /*
+     *清楚用户的缓存信息
+     *
+     */
+    void clearUserCache(SysUser sysUser);
 }

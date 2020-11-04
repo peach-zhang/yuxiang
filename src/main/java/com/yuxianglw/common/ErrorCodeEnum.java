@@ -23,7 +23,7 @@ public enum  ErrorCodeEnum implements BaseCodeInterface {
     //用户相关
     USER_PWD_ACCOUNT_NOT_FOUND(50001, " 账号/密码错误! "),
     LOGIN_NO_TOKEN(50002, " Token无效，您无权访问该接口! "),
-    DISALLOW_CURRENT_USER(10003," 不允许禁用当前用户 "),
+    DISALLOW_CURRENT_USER(50003," 账号已被锁定 "),
     LOGIN_OUT_FAIL(50004," 退出失败 "),
     INVALID_TOKEN(50005," token错误，请重新登入！"),
     EXPIRED_TOKEN(50006," token过期，请重新登入！");

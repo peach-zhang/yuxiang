@@ -53,18 +53,17 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         try {
-            executeLogin(request, response);
-            return true;
+           return executeLogin(request, response);
         } catch (Exception e) {
             throw new AuthenticationException("Token失效，请重新登录", e);
         }
     }
 
     /**
-     *
+     *登录认证
      */
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         try {
             //1.获取token 判断是否存在
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -81,7 +80,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         } catch (AuthenticationException e) {
             log.error("登录失败 {}",e);
             responseTokenError(response,e.getMessage());
-            return  false;
+            return false;
         }
         return true;
     }
@@ -98,6 +97,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         try (PrintWriter out = httpServletResponse.getWriter()) {
             String s = JSON.toJSONString(Result.error(msg));
             out.append(s);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
