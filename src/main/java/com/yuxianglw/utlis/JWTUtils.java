@@ -11,15 +11,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.yuxianglw.common.BizConstant;
 
 import java.util.Date;
 
 public class JWTUtils {
-    /**
-     * 过期时间6小时
-     */
-    private static final long EXPIRE_TIME = 6*60*60*1000;
-
     /**
      * 校验token是否正确
      * @param token 密钥
@@ -59,7 +55,7 @@ public class JWTUtils {
      * @return 加密的token
      */
     public static String sign(String username, String secret) {
-        Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
+        Date date = new Date(System.currentTimeMillis() + BizConstant.EXPIRE_TIME);
         Algorithm algorithm = Algorithm.HMAC256(secret);
         // 附带username信息
         return JWT.create()

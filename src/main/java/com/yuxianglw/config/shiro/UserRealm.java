@@ -112,7 +112,7 @@ public class UserRealm extends AuthorizingRealm {
 			throw new LockedAccountException(CommonEnum.ACCOUNT_NUMBER_LOCK.getMsg());
 		}
 		//保存用户信息
-		redisUtils.set(username + BizConstant.CACHE_USER,sysUser);
+		redisUtils.set(username + BizConstant.CACHE_USER,sysUser,BizConstant.EXPIRE_TIME);
 		return new SimpleAuthenticationInfo(username, token, getName());
 	}
 

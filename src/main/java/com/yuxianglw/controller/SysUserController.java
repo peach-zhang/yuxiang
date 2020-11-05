@@ -37,11 +37,9 @@ public class SysUserController {
         return  save?Result.ok("更新成功"):Result.error("保存失败");
     }
 
-    @DeleteMapping("/deleteUser")
-    public Result<?> deleteUser(@RequestParam("id") String id){
-        boolean result = sysUserService.removeById(id);
-        String msg = result?"删除成功":"删除失败";
-        return Result.ok(msg);
+    @PutMapping("/deleteUser")
+    public Result<?> deleteUser(@RequestBody SysUserDTO sysUserDTO){
+        return sysUserService.deleteUserById(sysUserDTO);
     }
 
     @GetMapping("/queryUser")

@@ -17,7 +17,7 @@
 
     <select id="queryPermissionByRoleIds" resultType="com.yuxianglw.entity.SysPermission" parameterType="list">
         SELECT S1.* FROM SYS_PERMISSION S1 LEFT JOIN SYS_ROLE_PERMISSION S2 ON S1.ID = S2.ROLE_ID
-        WHERE S2.ROLE_ID IN
+        WHERE  S2.ROLE_ID IN
         <foreach  item="item" collection="roleIds" index="index"  open="(" separator="," close=")">
             #{item}
         </foreach>

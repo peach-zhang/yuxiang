@@ -26,5 +26,6 @@ public class BizConstant {
     public static final String CACHE_TOKEN = ":token";
     //缓存user key
     public static final String CACHE_USER = ":user";
-
+    //过期时间6小时
+    public static final long EXPIRE_TIME = 6*60*60*1000;
 }

@@ -20,10 +20,10 @@ public interface SysUserService extends IService<SysUser> {
 
     /**
      *
-     * @param id
+     * @param sysUserDTO
      * @return
      */
-    public Result<?> deleteUserById(@Param("id") String id);
+    public Result<?> deleteUserById(SysUserDTO sysUserDTO);
 
     /**
      * 用户登入

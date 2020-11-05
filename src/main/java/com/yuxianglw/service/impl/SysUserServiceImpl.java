@@ -43,18 +43,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     @Transactional
-    public Result<?> deleteUserById(String id) {
-        SysUser sysUser = sysUserMapper.selectById(id);
+    public Result<?> deleteUserById(SysUserDTO sysUserDTO) {
+        SysUser sysUser = sysUserMapper.selectById(sysUserDTO.getId());
         if(Objects.nonNull(sysUser)){
-            sysUser.setDelFlag(CommonConstant.DEL_FLAG_1);
-            int i = sysUserMapper.updateById(sysUser);
-            if(i>0){
-                return Result.ok("删除成功");
-            }else{
-                return Result.error("删除失败");
+            if(StringUtils.equals(BizConstant.SUPER_ADMINISTRATOR,sysUser.getUserName())){
+                return Result.error("超级管理员不可删除!");
             }
+            this.clearUserCache(sysUser);
+            sysUserMapper.deleteById(sysUser.getId());
+            return Result.ok("删除成功!");
         }
-        return Result.error("删除对象不存在");
+        return Result.error("删除对象不存在!");
     }
 
     @Override
@@ -80,7 +79,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             data.put("token",token);
             JWTToken jwtToken = new JWTToken(token);
             SecurityUtils.getSubject().login(jwtToken);
-            redisUtils.set(sysUser.getUserName() + BizConstant.CACHE_TOKEN,token);
+            redisUtils.set(sysUser.getUserName() + BizConstant.CACHE_TOKEN,token,BizConstant.EXPIRE_TIME);
         } else {
             throw new ServiceException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND);
         }
@@ -103,6 +102,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         QueryWrapper<SysUser> wapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(username)) {wapper.eq("USER_NAME",username);}
         if(StringUtils.isNotBlank(phone)) {wapper.eq("PHONE",phone);}
+        wapper.eq("DEL_FLAG",CommonConstant.DEL_FLAG_0);
         Integer integer = sysUserMapper.selectCount(wapper);
         Page<SysUser> sysUserPage = new Page<>();
         Page<SysUserDTO> sysUserDTOPage = new Page<>();
@@ -168,7 +168,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysUser queryUserByName(String userName){
         if(StringUtils.isNotBlank(userName)){
             QueryWrapper<SysUser> wapper = new QueryWrapper<>();
-            wapper.eq("USER_NAME",userName);
+            wapper.eq("USER_NAME",userName).eq("DEL_FLAG",CommonConstant.DEL_FLAG_0);
             List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
             if(CollectionUtils.isNotEmpty(sysUsers)){
                 return sysUsers.get(0);
