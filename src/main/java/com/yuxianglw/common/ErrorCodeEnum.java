@@ -26,7 +26,9 @@ public enum  ErrorCodeEnum implements BaseCodeInterface {
     DISALLOW_CURRENT_USER(50003," 账号已被锁定 "),
     LOGIN_OUT_FAIL(50004," 退出失败 "),
     INVALID_TOKEN(50005," token错误，请重新登入！"),
-    EXPIRED_TOKEN(50006," token过期，请重新登入！");
+    EXPIRED_TOKEN(50006," token过期，请重新登入！"),
+    USER_DOES_NOT_EXIST(50007," 用户不存在！"),
+    NO_RIGHT_TO_OPERATE(50008," 权限不足！");
     /** 错误码 */
     private int resultCode;
 

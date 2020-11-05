@@ -5,6 +5,8 @@ import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.entity.dto.SysUserDTO;
 import com.yuxianglw.service.SysUserService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,7 @@ public class SysUserController {
     }
 
     @PutMapping("/deleteUser")
+    @RequiresRoles(value = {"admin"},logical = Logical.OR)
     public Result<?> deleteUser(@RequestBody SysUserDTO sysUserDTO){
         return sysUserService.deleteUserById(sysUserDTO);
     }

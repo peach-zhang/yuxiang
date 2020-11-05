@@ -16,6 +16,7 @@ import com.yuxianglw.utlis.JWTUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -64,8 +65,11 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		SysUser sysUser  = (SysUser) principals.getPrimaryPrincipal();
-		new QueryWrapper<SysUserRole>();
+		String username  = (String) principals.getPrimaryPrincipal();
+		final SysUser sysUser = sysUserMapper.selectUserByName(username);
+		if(Objects.isNull(sysUser)){
+			throw new ServiceException(ErrorCodeEnum.USER_DOES_NOT_EXIST);
+		}
 		List<SysRole> sysRoles = sysRoleMapper.queryRoleByUserId(sysUser.getId());
 		if(CollectionUtils.isNotEmpty(sysRoles)){
 			List<String> roles = sysRoles.stream().map(SysRole::getRoleName).collect(Collectors.toList());
