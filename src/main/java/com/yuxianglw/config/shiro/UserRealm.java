@@ -55,10 +55,6 @@ public class UserRealm extends AuthorizingRealm {
 		super.setAuthorizationCachingEnabled(true);
 		super.setAuthorizationCacheName(CommonConstant.AUTHORIZATIONCACHE);
 	}
-
-	/**
-	 * 大坑！，必须重写此方法，不然Shiro会报错
-	 */
 	@Override
 	public boolean supports(AuthenticationToken token) {
 		return token instanceof JWTToken;
@@ -80,7 +76,6 @@ public class UserRealm extends AuthorizingRealm {
 				Set<String> permissions = sysPermissions.stream().map(SysPermission::getName).collect(Collectors.toSet());
 				authorizationInfo.addStringPermissions(permissions);
 			}
-
 		}
         return authorizationInfo;
 	}
@@ -102,10 +97,14 @@ public class UserRealm extends AuthorizingRealm {
 			throw new AccountException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 		if(JWTUtils.isExpire(token)){
+			redisUtils.del(username + BizConstant.CACHE_USER);
+			redisUtils.del(username + BizConstant.CACHE_TOKEN);
 			throw new AuthenticationException(ErrorCodeEnum.EXPIRED_TOKEN.getResultMsg());
 		}
 
 		if (!JWTUtils.verify(token, username, sysUser.getPassWord())) {
+			redisUtils.del(username + BizConstant.CACHE_USER);
+			redisUtils.del(username + BizConstant.CACHE_TOKEN);
 			throw new CredentialsException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 
