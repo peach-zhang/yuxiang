@@ -1,5 +1,6 @@
 package com.yuxianglw.utlis;
 
+import com.yuxianglw.common.BizConstant;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**
@@ -21,4 +22,5 @@ public class MD5Utils {
         SimpleHash simpleHash = new SimpleHash(algorithmName,source,salt,hashIterations);
         return simpleHash+"";
     }
+
 }

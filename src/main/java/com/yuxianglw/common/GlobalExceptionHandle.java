@@ -1,5 +1,6 @@
 package com.yuxianglw.common;
 
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,12 @@ public class GlobalExceptionHandle<T> {
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public Result handleAuthorizationException(AuthorizationException exception){
+    public Result handleAuthorizationException(){
         return Result.error(ErrorCodeEnum.NO_RIGHT_TO_OPERATE.getResultCode(),ErrorCodeEnum.NO_RIGHT_TO_OPERATE.getResultMsg());
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public Result handleAuthenticationException(){
+        return Result.error(ErrorCodeEnum.EXPIRED_TOKEN.getResultCode(),ErrorCodeEnum.EXPIRED_TOKEN.getResultMsg());
     }
 
     @ExceptionHandler(Exception.class)

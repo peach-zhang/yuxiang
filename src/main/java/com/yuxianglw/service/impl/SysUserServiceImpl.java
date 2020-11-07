@@ -1,5 +1,6 @@
 package com.yuxianglw.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +13,7 @@ import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysUserService;
 import com.yuxianglw.utlis.JWTUtils;
 import com.yuxianglw.utlis.MD5Utils;
+import com.yuxianglw.utlis.StrUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -49,6 +52,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             if(StringUtils.equals(BizConstant.SUPER_ADMINISTRATOR,sysUser.getUserName())){
                 return Result.error("超级管理员不可删除!");
             }
+            QueryWrapper<SysUser> wapper = new QueryWrapper<>();
+            wapper.eq("SUPERIOR_ID",sysUserDTO.getId());
+            final List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
+            if(CollectionUtils.isNotEmpty(sysUsers)){return Result.error("用户下存在代理不可删除！");}
             this.clearUserCache(sysUser);
             sysUserMapper.deleteById(sysUser.getId());
             return Result.ok("删除成功!");
@@ -117,12 +124,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             for (SysUser sysUser : records) {
                 SysUserDTO sysUserDTO = new SysUserDTO();
                 BeanUtils.copyProperties(sysUser,sysUserDTO);
+                //创建人
                 SysUser CreatedBy = this.queryUserByName(sysUser.getCreatedBy());
                 if(Objects.nonNull(CreatedBy)){sysUserDTO.setCreatedBy(CreatedBy.getRealName());}
+                //更新人
                 SysUser UpdatedBy = this.queryUserByName(sysUser.getUpdatedBy());
                 if(Objects.nonNull(UpdatedBy)){sysUserDTO.setUpdatedBy(UpdatedBy.getRealName());}
+                //状态转换
                 boolean status = this.statusAdapter(sysUser.getStatus());
                 sysUserDTO.setStatus(status);
+                //性别中英转换
+                sysUserDTO.setSex(StrUtils.sxeTransformChinese(sysUserDTO.getSex()));
                 SysUser superiorUser = this.queryUserByid(sysUser.getSuperiorId());
                 if(Objects.nonNull(superiorUser)){sysUserDTO.setSuperiorName(superiorUser.getRealName());}
                 sysUserDTOList.add(sysUserDTO);
@@ -157,8 +169,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return Result.error(BizConstant.NOT_FORBIDDEN);
         }
         //状态转换和设置状态
-        String _status = status?CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode():CommonEnum.ACCOUNT_NUMBER_LOCK.getCode();
-        sysUser.setStatus(_status);
+        String booleanStatus = status?CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode():CommonEnum.ACCOUNT_NUMBER_LOCK.getCode();
+        sysUser.setStatus(booleanStatus);
         sysUserMapper.updateById(sysUser);
         this.clearUserCache(sysUser);
         return Result.ok(BizConstant.SUCCESSFUL_OPERATION);
@@ -202,5 +214,65 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         redisUtils.del(BizConstant.AUTHENTICATION_CACHE+sysUser.getUserName());
         //清除授权信息
         redisUtils.del(BizConstant.AUTHORIZATION_CACHE+sysUser.getUserName());
+    }
+
+    @Override
+    public Result<?> addUser(SysUser sysUser) {
+        if(StringUtils.isBlank(sysUser.getUserName()) || StringUtils.isBlank(sysUser.getRealName())
+                ||StringUtils.isBlank(sysUser.getEmail()) || StringUtils.isBlank(sysUser.getPhone())){
+            return Result.error("用户参数不可为空");
+        }
+        //判断用户名是否存在
+        QueryWrapper<SysUser> wapper = new QueryWrapper<>();
+        wapper.eq("USER_NAME",sysUser.getUserName());
+        final List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
+        if(CollectionUtils.isNotEmpty(sysUsers)){return Result.error("该用户名已存在！");}
+        //盐
+        final String salt = RandomUtil.randomString(10);
+        sysUser.setSalt(salt);
+        //设置默认密码
+        final String password = MD5Utils.md5Encryption(BizConstant.DEFAULT_PASSWORD, salt);
+        sysUser.setPassWord(password);
+        //保存
+        sysUserMapper.insert(sysUser);
+        return Result.ok("添加成功");
+    }
+
+    @Override
+    @Transactional
+    public Result<?> batchDeleteUser(List<SysUserDTO> sysUserDTOS) {
+        String oneself =(String)SecurityUtils.getSubject().getPrincipal();
+        final List<SysUserDTO> Root = sysUserDTOS.stream().filter(user -> StringUtils.equals(user.getUserName(), BizConstant.SUPER_ADMINISTRATOR)
+                ||StringUtils.equals(user.getUserName(), oneself)).collect(Collectors.toList());
+        if(CollectionUtils.isNotEmpty(Root)){
+            return Result.error("不可删除管理员/自己！");
+        }
+        final List<String> ids = sysUserDTOS.stream().map(user -> user.getId()).collect(Collectors.toList());
+        QueryWrapper<SysUser> wapper = new QueryWrapper<>();
+        for (String id : ids) {
+            wapper.eq("SUPERIOR_ID",id);
+            final List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
+            if(CollectionUtils.isNotEmpty(sysUsers)){
+                return Result.error("用户下存在代理不可删除！");
+            }
+        }
+        sysUserMapper.deleteBatchIds(ids);
+        return Result.ok("批量删除成功");
+    }
+
+    @Override
+    @Transactional
+    public Result editUser(SysUserDTO sysUserDTO) {
+        final SysUser sysUser = sysUserMapper.selectById(sysUserDTO.getId());
+        if(Objects.isNull(sysUser)){
+            return Result.error("编辑对象不存在！");
+        }
+        sysUser.setSex(sysUserDTO.getSex());
+        sysUser.setPhone(sysUserDTO.getPhone());
+        sysUser.setEmail(sysUserDTO.getEmail());
+        sysUser.setSuperiorId(sysUserDTO.getSuperiorId());
+        sysUser.setRealName(sysUserDTO.getRealName());
+        sysUserMapper.updateById(sysUser);
+        return Result.ok("编辑成功！");
     }
 }

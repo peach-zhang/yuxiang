@@ -6,6 +6,7 @@ import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.entity.dto.SysUserDTO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,4 +58,19 @@ public interface SysUserService extends IService<SysUser> {
      *
      */
     void clearUserCache(SysUser sysUser);
+    /*
+     *添加系统用户
+     *
+     */
+    Result<?> addUser(SysUser sysUser);
+    /*
+     *批量删除用户
+     *
+     */
+    Result<?> batchDeleteUser(List<SysUserDTO> sysUserDTOS);
+    /*
+     *修改用户
+     *
+     */
+    Result editUser(SysUserDTO sysUserDTO);
 }

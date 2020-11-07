@@ -28,4 +28,16 @@ public class BizConstant {
     public static final String CACHE_USER = ":user";
     //过期时间6小时
     public static final long EXPIRE_TIME = 6*60*60*1000;
+    //默认密码
+    public static final String DEFAULT_PASSWORD = "123456";
+    //男
+    public static final String MAN = "MAN";
+    //女
+    public static final String WOMAN = "WOMAN";
+    //男
+    public static final String ZH_MAN = "男";
+    //女
+    public static final String ZH_WOMAN = "女";
+    //字符
+    public static final String VARCHAR = "QWERTYUIOPASDFGHJKLZXCVBNM123456789";
 }

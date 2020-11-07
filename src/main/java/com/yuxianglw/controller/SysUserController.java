@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,15 +29,13 @@ public class SysUserController {
     private SysUserService sysUserService;
 
     @PostMapping("/addUser")
-    public  String addUser(@RequestBody SysUser sysUser){
-        boolean save = sysUserService.save(sysUser);
-        return  save?"保存成功":"保存失败";
+    public  Result<?> addUser(@RequestBody SysUser sysUser){
+        return sysUserService.addUser(sysUser);
     }
 
-    @PutMapping("/updateUser")
-    public Result updateUser(@RequestBody SysUser sysUser){
-        boolean save = sysUserService.updateById(sysUser);
-        return  save?Result.ok("更新成功"):Result.error("保存失败");
+    @PutMapping("/editUser")
+    public Result editUser(@RequestBody SysUserDTO sysUserDTO){
+        return  sysUserService.editUser(sysUserDTO);
     }
 
     @PutMapping("/deleteUser")
@@ -56,6 +55,10 @@ public class SysUserController {
     @PutMapping("/changeStatus")
     public Result<?> editUserStatus(@RequestBody SysUserDTO sysUserDTO){
         return sysUserService.editUserStatus(sysUserDTO);
+    }
+    @PutMapping("/batchDeleteUser")
+    public Result<?> batchDeleteUser(@RequestBody List<SysUserDTO> sysUserDTO){
+        return sysUserService.batchDeleteUser(sysUserDTO);
     }
 
 }

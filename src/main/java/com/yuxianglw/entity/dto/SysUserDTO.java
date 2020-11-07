@@ -42,6 +42,11 @@ public class SysUserDTO implements Serializable {
     private String email;
 
     /**
+     * 上级id
+     */
+    private String superiorId;
+
+    /**
      * 上级名称
      */
     private String superiorName;
