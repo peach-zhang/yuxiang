@@ -1,6 +1,7 @@
 package com.yuxianglw.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysRole;
 
 /**
@@ -12,5 +13,16 @@ import com.yuxianglw.entity.SysRole;
  * @since 2020-10-18
  */
 public interface SysRoleService extends IService<SysRole> {
-
+    /*
+    * 获取角色列表
+    */
+    Result<?> queryRoles();
+    /*
+     * 获取用户未拥有的角色
+     */
+    Result<?> queryRolesThatDoNotExistForUsers(String userId);
+    /*
+     * 获取用户拥有的角色
+     */
+    Result<?> queryTheRolesTheUserHas(String userId);
 }

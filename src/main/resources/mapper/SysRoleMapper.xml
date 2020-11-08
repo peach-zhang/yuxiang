@@ -16,8 +16,16 @@
         <result column="UPDATED_TIME" property="updatedTime" />
     </resultMap>
 
+    <!--  查询出用户存在的角色  -->
     <select id="queryRoleByUserId" resultType="com.yuxianglw.entity.SysRole" parameterType="string">
-            SELECT S1.* FROM SYS_ROLE S1 LEFT JOIN SYS_USER_ROLE S2 ON S1.ID = S2.ROLE_ID WHERE S2.USER_ID = #{userI}
+            SELECT S1.* FROM SYS_ROLE S1 LEFT JOIN SYS_USER_ROLE S2 ON S1.ID = S2.ROLE_ID
+            WHERE S2.DEL_FLAG='0' AND S1.DEL_FLAG='0' AND S2.USER_ID = #{userId}
+    </select>
+
+    <!--  查询出用户不存在的角色  -->
+    <select id="queryRolesThatDoNotExistForUsers" resultType="com.yuxianglw.entity.SysRole">
+        SELECT S1.* FROM SYS_ROLE S1 LEFT JOIN SYS_USER_ROLE S2 ON S1.ID = S2.ROLE_ID
+        WHERE S2.DEL_FLAG='0' AND S1.DEL_FLAG='0' AND S2.USER_ID != #{userId}
     </select>
 
 </mapper>

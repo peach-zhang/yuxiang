@@ -2,6 +2,7 @@ package com.yuxianglw.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuxianglw.entity.SysRole;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ import java.util.List;
  */
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
-    List<SysRole> queryRoleByUserId(String id);
+    List<SysRole> queryRoleByUserId(@Param("userId") String userId);
+
+    List<SysRole> queryRolesThatDoNotExistForUsers(@Param("userId") String userId);
 }
