@@ -52,12 +52,6 @@ public interface SysUserService extends IService<SysUser> {
      *
      */
     Result<?> editUserStatus(SysUserDTO sysUserDTO);
-
-    /*
-     *清楚用户的缓存信息
-     *
-     */
-    void clearUserCache(SysUser sysUser);
     /*
      *添加系统用户
      *
@@ -73,4 +67,9 @@ public interface SysUserService extends IService<SysUser> {
      *
      */
     Result editUser(SysUserDTO sysUserDTO);
+    /*
+     *获取登录用户信息
+     *
+     */
+    Result<?> queryUserInfo();
 }

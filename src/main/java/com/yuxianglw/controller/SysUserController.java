@@ -60,6 +60,10 @@ public class SysUserController {
     public Result<?> batchDeleteUser(@RequestBody List<SysUserDTO> sysUserDTO){
         return sysUserService.batchDeleteUser(sysUserDTO);
     }
+    @GetMapping("/queryUserInfo")
+    public Result<?> queryUserInfo(){
+        return sysUserService.queryUserInfo();
+    }
 
 }
 

@@ -56,7 +56,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             wapper.eq("SUPERIOR_ID",sysUserDTO.getId());
             final List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
             if(CollectionUtils.isNotEmpty(sysUsers)){return Result.error("用户下存在代理不可删除！");}
-            this.clearUserCache(sysUser);
+            redisUtils.clearUserCache(sysUser);
             sysUserMapper.deleteById(sysUser.getId());
             return Result.ok("删除成功!");
         }
@@ -172,48 +172,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         String booleanStatus = status?CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode():CommonEnum.ACCOUNT_NUMBER_LOCK.getCode();
         sysUser.setStatus(booleanStatus);
         sysUserMapper.updateById(sysUser);
-        this.clearUserCache(sysUser);
+        redisUtils.clearUserCache(sysUser);
         return Result.ok(BizConstant.SUCCESSFUL_OPERATION);
-    }
-
-    /*根据名称获取用户*/
-    private SysUser queryUserByName(String userName){
-        if(StringUtils.isNotBlank(userName)){
-            QueryWrapper<SysUser> wapper = new QueryWrapper<>();
-            wapper.eq("USER_NAME",userName).eq("DEL_FLAG",CommonConstant.DEL_FLAG_0);
-            List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
-            if(CollectionUtils.isNotEmpty(sysUsers)){
-                return sysUsers.get(0);
-            }
-        }
-        return  null;
-    }
-    /*状态中英文转换*/
-    private boolean statusAdapter(String status){
-        if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode())){
-            return true;
-        }else if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
-            return false;
-        }
-        return false;
-    }
-
-    /*根据id 查询除上级*/
-    private SysUser queryUserByid(String id){
-        return  sysUserMapper.selectById(id);
-    }
-
-    /*清除用户的缓存*/
-    @Override
-    public void clearUserCache(SysUser sysUser){
-        //清除用户缓存
-        redisUtils.del(sysUser.getUserName()+BizConstant.CACHE_USER);
-        //清除token缓存
-        redisUtils.del(sysUser.getUserName()+BizConstant.CACHE_TOKEN);
-        //清除认证信息
-        redisUtils.del(BizConstant.AUTHENTICATION_CACHE+sysUser.getUserName());
-        //清除授权信息
-        redisUtils.del(BizConstant.AUTHORIZATION_CACHE+sysUser.getUserName());
     }
 
     @Override
@@ -274,5 +234,43 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setRealName(sysUserDTO.getRealName());
         sysUserMapper.updateById(sysUser);
         return Result.ok("编辑成功！");
+    }
+
+    @Override
+    public Result<?> queryUserInfo() {
+        String username = (String)SecurityUtils.getSubject().getPrincipal();
+        final SysUser sysUser = sysUserMapper.selectUserByName(username);
+        SysUserDTO sysUserDTO = new SysUserDTO();
+        BeanUtils.copyProperties(sysUser,sysUserDTO);
+        //性别中英转换
+        sysUserDTO.setSex(StrUtils.sxeTransformChinese(sysUserDTO.getSex()));
+        return Result.ok(sysUserDTO);
+    }
+
+    /*根据名称获取用户*/
+    private SysUser queryUserByName(String userName){
+        if(StringUtils.isNotBlank(userName)){
+            QueryWrapper<SysUser> wapper = new QueryWrapper<>();
+            wapper.eq("USER_NAME",userName).eq("DEL_FLAG",CommonConstant.DEL_FLAG_0);
+            List<SysUser> sysUsers = sysUserMapper.selectList(wapper);
+            if(CollectionUtils.isNotEmpty(sysUsers)){
+                return sysUsers.get(0);
+            }
+        }
+        return  null;
+    }
+    /*状态中英文转换*/
+    private boolean statusAdapter(String status){
+        if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_ACTIVE.getCode())){
+            return true;
+        }else if(StringUtils.equals(status, CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
+            return false;
+        }
+        return false;
+    }
+
+    /*根据id 查询除上级*/
+    private SysUser queryUserByid(String id){
+        return  sysUserMapper.selectById(id);
     }
 }

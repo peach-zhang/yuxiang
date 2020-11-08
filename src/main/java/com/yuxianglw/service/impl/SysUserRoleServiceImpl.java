@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuxianglw.common.BizConstant;
 import com.yuxianglw.common.Result;
+import com.yuxianglw.config.redis.RedisUtils;
+import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.entity.SysUserRole;
+import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.mapper.SysUserRoleMapper;
 import com.yuxianglw.service.SysUserRoleService;
 import org.apache.commons.collections.CollectionUtils;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -30,12 +34,26 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
 
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
     @Override
     @Transactional
     public Result<?> addRoleForUser(Map<String,Object> param) {
         String userId = (String)param.get("userId");
         List<String> roles = (List<String>)param.get("roles");
         if(StringUtils.isBlank(userId)){return  Result.error(BizConstant.PARAMETER_IS_EMPTY);}
+        //编辑对象
+        final SysUser sysUser = sysUserMapper.selectById(userId);
+        if(Objects.isNull(sysUser)){
+            return Result.error(BizConstant.NO_CORRESPONDING_USER);
+        }
+        //清楚用户缓存中数据
+        redisUtils.clearUserCache(sysUser);
+        //删除用户拥有的角色
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
         wrapper.eq("USER_ID",userId);
         sysUserRoleMapper.delete(wrapper);
