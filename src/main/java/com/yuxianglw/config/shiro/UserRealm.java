@@ -1,14 +1,12 @@
 package com.yuxianglw.config.shiro;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yuxianglw.common.*;
 import com.yuxianglw.config.jwt.JWTToken;
 import com.yuxianglw.config.redis.RedisUtils;
 import com.yuxianglw.entity.SysPermission;
 import com.yuxianglw.entity.SysRole;
 import com.yuxianglw.entity.SysUser;
-import com.yuxianglw.entity.SysUserRole;
 import com.yuxianglw.mapper.SysPermissionMapper;
 import com.yuxianglw.mapper.SysRoleMapper;
 import com.yuxianglw.mapper.SysUserMapper;
@@ -16,7 +14,6 @@ import com.yuxianglw.utlis.JWTUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -101,18 +98,17 @@ public class UserRealm extends AuthorizingRealm {
 			throw new AccountException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 		if(JWTUtils.isExpire(token)){
-			redisUtils.del(username + BizConstant.CACHE_USER);
-			redisUtils.del(username + BizConstant.CACHE_TOKEN);
+			redisUtils.clearUserCache(sysUser);
 			throw new AuthenticationException(ErrorCodeEnum.EXPIRED_TOKEN.getResultMsg());
 		}
 
 		if (!JWTUtils.verify(token, username, sysUser.getPassWord())) {
-			redisUtils.del(username + BizConstant.CACHE_USER);
-			redisUtils.del(username + BizConstant.CACHE_TOKEN);
+			redisUtils.clearUserCache(sysUser);
 			throw new CredentialsException(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
 		}
 
 		if(StringUtils.equals(sysUser.getStatus(), CommonEnum.ACCOUNT_NUMBER_LOCK.getCode())){
+			redisUtils.clearUserCache(sysUser);
 			throw new LockedAccountException(CommonEnum.ACCOUNT_NUMBER_LOCK.getMsg());
 		}
 		//保存用户信息
