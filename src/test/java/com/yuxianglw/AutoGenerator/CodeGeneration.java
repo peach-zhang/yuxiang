@@ -45,7 +45,7 @@ public class CodeGeneration {
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("200967tao");
-        dsc.setUrl("jdbc:mysql://203.195.174.82:3306/db_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai");  //指定数据库
+        dsc.setUrl("jdbc:mysql://192.168.0.131:3306/db_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai");  //指定数据库
         autoGenerator.setDataSource(dsc);
 
        // 策略配置
@@ -53,7 +53,7 @@ public class CodeGeneration {
         // 表名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 需要生成的表
-        strategy.setInclude(new String[] { "SYS_BACKGROUND_IMAGE" });
+        strategy.setInclude(new String[] { "SYS_lABOUR" });
         // 自动lombok
         strategy.setEntityLombokModel(true);
         //逻辑删除标识字段

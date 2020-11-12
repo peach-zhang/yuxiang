@@ -1,6 +1,7 @@
 package com.yuxianglw.config.jwt;
 
 import com.alibaba.fastjson.JSON;
+import com.yuxianglw.common.ErrorCodeEnum;
 import com.yuxianglw.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -70,7 +71,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             String token = httpServletRequest.getHeader("Authorization");
             //2. 如果客户端没有携带token，拦下请求
             if(null==token||"".equals(token)){
-                responseTokenError(response,"Token无效，您无权访问该接口");
+                responseTokenError(response,ErrorCodeEnum.LOGIN_NO_TOKEN.getResultCode(),ErrorCodeEnum.LOGIN_NO_TOKEN.getResultMsg());
                 return false;
             }
             JWTToken jwtToken = new JWTToken(token);
@@ -79,9 +80,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             // 如果没有抛出异常则代表登入成功，返回true
         } catch (AuthenticationException e) {
             log.error("登录失败 {}",e);
-            responseTokenError(response,e.getMessage());
+            responseTokenError(response, ErrorCodeEnum.EXPIRED_TOKEN.getResultCode(),ErrorCodeEnum.EXPIRED_TOKEN.getResultMsg());
             return false;
         }
+
         return true;
     }
 
@@ -89,13 +91,13 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     /**
      * 无需转发，直接返回Response信息 Token认证错误
      */
-    private void responseTokenError(ServletResponse response, String msg) {
+    private void responseTokenError(ServletResponse response, int code, String msg) {
         HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
         httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json; charset=utf-8");
         try (PrintWriter out = httpServletResponse.getWriter()) {
-            String s = JSON.toJSONString(Result.error(msg));
+            String s = JSON.toJSONString(Result.error(code,msg));
             out.append(s);
             out.flush();
         } catch (IOException e) {
