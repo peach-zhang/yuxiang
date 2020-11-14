@@ -18,6 +18,10 @@ public class BizConstant {
     public static final String DONT_BAN_YOURSELF = "不可锁定自己！";
     //操作成功
     public static final String SUCCESSFUL_OPERATION = "操作成功！";
+    //保存成功
+    public static final String SAVED_SUCCESSFULLY = "保存成功！";
+    //删除成功
+    public static final String DETELED_SUCCESSFULLY = "删除成功！";
     //认证缓存key
     public static final String AUTHENTICATION_CACHE = "shiro:cache:AuthenticationCache:";
     //授权缓存key
@@ -34,10 +38,6 @@ public class BizConstant {
     public static final String MAN = "MAN";
     //女
     public static final String WOMAN = "WOMAN";
-    //男
-    public static final String ZH_MAN = "男";
-    //女
-    public static final String ZH_WOMAN = "女";
     //字符
     public static final String VARCHAR = "QWERTYUIOPASDFGHJKLZXCVBNM123456789";
 }

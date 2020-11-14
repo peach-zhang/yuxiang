@@ -18,5 +18,13 @@
         <result column="UPDATED_BY" property="updatedBy" />
         <result column="UPDATED_TIME" property="updatedTime" />
     </resultMap>
+    <!--  根据身份证查询人员  -->
+    <select id="queryLabourByIdcard" resultType="com.yuxianglw.entity.SysLabour">
+        select  l.* from Sys_Labour l where l.idcard = #{idcard} and l.del_flag = '0'
+    </select>
+    <!--查询除当前人员外的该身份证号的人员-->
+    <select id="accordingToIDQuery" resultType="com.yuxianglw.entity.SysLabour">
+         select  l.* from Sys_Labour l where l.idcard = #{idcard} and l.del_flag = '0' and l.id != #{id}
+    </select>
 
 </mapper>

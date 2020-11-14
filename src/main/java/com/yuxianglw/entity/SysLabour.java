@@ -5,12 +5,16 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 员工 
+ * 员工
  * </p>
  *
  * @author zhangtao
@@ -32,12 +36,14 @@ import lombok.EqualsAndHashCode;
      * 姓名
      */
       @TableField("NAME")
+      @NotNull(message = "姓名不可为空！")
     private String name;
 
       /**
      * 性别
      */
       @TableField("SEX")
+      @NotNull(message = "姓别不可为空！")
     private String sex;
 
       /**
@@ -50,12 +56,14 @@ import lombok.EqualsAndHashCode;
      * 身份证
      */
       @TableField("IDCARD")
+      @NotNull(message = "身份证不可为空！")
     private String idcard;
 
       /**
      * 手机号
      */
       @TableField("PHONE")
+      @NotNull(message = "手机号不可为空！")
     private String phone;
 
       /**
@@ -88,6 +96,7 @@ import lombok.EqualsAndHashCode;
      * 创建时间
      */
       @TableField("CREATED_TIME")
+      @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime createdTime;
 
       /**
@@ -100,6 +109,7 @@ import lombok.EqualsAndHashCode;
      * 更新时间
      */
       @TableField("UPDATED_TIME")
+      @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime updatedTime;
 
 

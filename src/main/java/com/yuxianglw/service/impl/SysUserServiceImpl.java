@@ -13,16 +13,13 @@ import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysUserService;
 import com.yuxianglw.utlis.JWTUtils;
 import com.yuxianglw.utlis.MD5Utils;
-import com.yuxianglw.utlis.StrUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -133,8 +130,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 //状态转换
                 boolean status = this.statusAdapter(sysUser.getStatus());
                 sysUserDTO.setStatus(status);
-                //性别中英转换
-                sysUserDTO.setSex(StrUtils.sxeTransformChinese(sysUserDTO.getSex()));
                 SysUser superiorUser = this.queryUserByid(sysUser.getSuperiorId());
                 if(Objects.nonNull(superiorUser)){sysUserDTO.setSuperiorName(superiorUser.getRealName());}
                 sysUserDTOList.add(sysUserDTO);
@@ -242,8 +237,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         final SysUser sysUser = sysUserMapper.selectUserByName(username);
         SysUserDTO sysUserDTO = new SysUserDTO();
         BeanUtils.copyProperties(sysUser,sysUserDTO);
-        //性别中英转换
-        sysUserDTO.setSex(StrUtils.sxeTransformChinese(sysUserDTO.getSex()));
         return Result.ok(sysUserDTO);
     }
 
