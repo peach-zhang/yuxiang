@@ -146,14 +146,25 @@ public class SysLabourServiceImpl extends ServiceImpl<SysLabourMapper, SysLabour
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        List<SysLabour> sysLabours = new ArrayList<>();
-        SysLabour sysLabour = new SysLabour();
-        sysLabours.add(sysLabour);
-        final Workbook sheets = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"), SysLabour.class, sysLabours);
-        OutputStream outputStream = new FileOutputStream(new File("D:\\FFOutput\\233.xls"));
-        sheets.write(outputStream);
-        outputStream.close();
-        sheets.close();
+    @Override
+    public void userListDownload(HttpServletResponse response, String name, String phone, String idcard, String sex) {
+        try {
+            String sysUserName = (String) SecurityUtils.getSubject().getPrincipal();
+            QueryWrapper<SysLabour> wapper = new QueryWrapper<>();
+            if(StringUtils.isNotBlank(name)) {wapper.eq("NAME",name);}
+            if(StringUtils.isNotBlank(phone)) {wapper.eq("PHONE",phone);}
+            if(StringUtils.isNotBlank(idcard)) {wapper.eq("IDCARD",idcard);}
+            if(StringUtils.isNotBlank(sex)) {wapper.eq("SEX",sex);}
+            wapper.eq("DEL_FLAG", CommonConstant.DEL_FLAG_0);
+            //只能查看自己的用户
+            final SysUser belongUser = sysUserMapper.selectUserByName(sysUserName);
+            wapper.eq("BELONG",belongUser.getId());
+            Assert.notNull(belongUser,"无法获取当前用户！");
+            final List<SysLabour> sysLabours = sysLabourMapper.selectList(wapper);
+            ExcelUtiles.exportExcel(sysLabours,"人员名单","人员信息",SysLabour.class,"人员名单.xls",response);
+        } catch (Exception e) {
+            log.error("下载模板失败！{}",e.getMessage());
+            throw  new ServiceException(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
     }
 }

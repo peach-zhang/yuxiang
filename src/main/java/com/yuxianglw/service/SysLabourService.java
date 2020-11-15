@@ -61,4 +61,14 @@ public interface SysLabourService extends IService<SysLabour> {
      * @return
      */
     void getTheTemplate(HttpServletResponse response);
+
+    /**
+     * 导出人员列表
+     * @param response
+     * @param name
+     * @param phone
+     * @param idcard
+     * @param sex
+     */
+    void userListDownload(HttpServletResponse response, String name, String phone, String idcard, String sex);
 }

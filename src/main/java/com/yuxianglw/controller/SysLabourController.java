@@ -62,5 +62,14 @@ public class SysLabourController {
           sysLabourService.getTheTemplate(response);
     }
 
+    @GetMapping("/userListDownload")
+    public void userListDownload(HttpServletResponse response,
+                                 @RequestParam(value = "name",required = false) String name,
+                                 @RequestParam(value = "phone",required = false) String phone,
+                                 @RequestParam(value = "idcard",required = false) String idcard,
+                                 @RequestParam(value = "sex",required = false) String sex){
+        sysLabourService.userListDownload(response,name,phone,idcard,sex);
+    }
+
 }
 
