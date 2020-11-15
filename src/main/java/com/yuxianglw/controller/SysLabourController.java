@@ -7,6 +7,8 @@ import com.yuxianglw.service.SysLabourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -44,13 +46,20 @@ public class SysLabourController {
     public Result<?> deleteUser(@RequestBody SysLabour sysLabour){
         return  sysLabourService.deleteUser(sysLabour);
     }
+
     @PutMapping("/batchDeleteUser")
     public Result<?> batchDeleteUser(@RequestBody List<SysLabour> sysLabours){
         return  sysLabourService.batchDeleteUser(sysLabours);
     }
+
     @PutMapping("/editUser")
     public Result<?> editUser(@RequestBody SysLabour sysLabour){
         return  sysLabourService.editUser(sysLabour);
+    }
+
+    @GetMapping("/getTheTemplate")
+    public void getTheTemplate(HttpServletResponse response){
+          sysLabourService.getTheTemplate(response);
     }
 
 }

@@ -115,7 +115,7 @@ public class LogAspect {
             //调用service保存SysLog实体类到数据库
             sysLogService.save(sysLog);
         } catch (Exception e) {
-           log.error("保存日志错误 {}",e);
+           log.error("保存日志错误!");
         }
     }
 

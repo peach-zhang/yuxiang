@@ -1,5 +1,7 @@
 package com.yuxianglw.entity;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.baomidou.mybatisplus.annotation.Version;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -21,7 +23,8 @@ import lombok.EqualsAndHashCode;
  * @since 2020-11-12
  */
 @Data
-  @EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false)
+@ExcelTarget("人员名单")
     public class SysLabour implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,6 +40,7 @@ import lombok.EqualsAndHashCode;
      */
       @TableField("NAME")
       @NotNull(message = "姓名不可为空！")
+      @Excel(name = "姓名")
     private String name;
 
       /**
@@ -44,12 +48,14 @@ import lombok.EqualsAndHashCode;
      */
       @TableField("SEX")
       @NotNull(message = "姓别不可为空！")
+      @Excel(name = "性别")
     private String sex;
 
       /**
      * 年龄
      */
       @TableField("AGE")
+      @Excel(name = "年龄")
     private Integer age;
 
       /**
@@ -57,6 +63,7 @@ import lombok.EqualsAndHashCode;
      */
       @TableField("IDCARD")
       @NotNull(message = "身份证不可为空！")
+      @Excel(name = "身份证")
     private String idcard;
 
       /**
@@ -64,6 +71,7 @@ import lombok.EqualsAndHashCode;
      */
       @TableField("PHONE")
       @NotNull(message = "手机号不可为空！")
+      @Excel(name = "手机号")
     private String phone;
 
       /**

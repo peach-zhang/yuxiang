@@ -4,6 +4,7 @@ import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysLabour;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -53,4 +54,11 @@ public interface SysLabourService extends IService<SysLabour> {
      * @return
      */
     Result<?> editUser(SysLabour sysLabour);
+
+    /**
+     * 获取上传模板
+     * @param response
+     * @return
+     */
+    void getTheTemplate(HttpServletResponse response);
 }

@@ -1,25 +1,33 @@
 package com.yuxianglw.service.impl;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yuxianglw.common.BizConstant;
-import com.yuxianglw.common.CommonConstant;
-import com.yuxianglw.common.Result;
+import com.yuxianglw.common.*;
 import com.yuxianglw.entity.SysLabour;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.mapper.SysLabourMapper;
 import com.yuxianglw.mapper.SysUserMapper;
 import com.yuxianglw.service.SysLabourService;
 import com.yuxianglw.utlis.CardUtil;
+import com.yuxianglw.utlis.ExcelUtiles;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +40,7 @@ import java.util.stream.Collectors;
  * @since 2020-11-12
  */
 @Service
+@Slf4j
 public class SysLabourServiceImpl extends ServiceImpl<SysLabourMapper, SysLabour> implements SysLabourService {
 
     @Autowired
@@ -122,5 +131,29 @@ public class SysLabourServiceImpl extends ServiceImpl<SysLabourMapper, SysLabour
         labour.setSex(sysLabour.getSex());
         sysLabourMapper.updateById(labour);
         return Result.ok(BizConstant.SUCCESSFUL_OPERATION);
+    }
+
+    @Override
+    public void getTheTemplate(HttpServletResponse response) {
+        try{
+            List<SysLabour> sysLabours = new ArrayList<>();
+            SysLabour sysLabour = new SysLabour();
+            sysLabours.add(sysLabour);
+            ExcelUtiles.exportExcel(sysLabours,"人员名单","人员信息",SysLabour.class,"人员名单.xls",response);
+        } catch (Exception e) {
+            log.error("下载模板失败！{}",e.getMessage());
+            throw  new ServiceException(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        List<SysLabour> sysLabours = new ArrayList<>();
+        SysLabour sysLabour = new SysLabour();
+        sysLabours.add(sysLabour);
+        final Workbook sheets = ExcelExportUtil.exportExcel(new ExportParams("2412312", "测试", "测试"), SysLabour.class, sysLabours);
+        OutputStream outputStream = new FileOutputStream(new File("D:\\FFOutput\\233.xls"));
+        sheets.write(outputStream);
+        outputStream.close();
+        sheets.close();
     }
 }
