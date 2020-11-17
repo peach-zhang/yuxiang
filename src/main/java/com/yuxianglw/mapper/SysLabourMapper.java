@@ -20,7 +20,8 @@ public interface SysLabourMapper extends BaseMapper<SysLabour> {
      * @param iscard
      * @return
      */
-   List<SysLabour> queryLabourByIdcard(@Param("idcard") String iscard);    /**
+   List<SysLabour> queryLabourByIdcard(@Param("idcard") String iscard);
+   /**
      * 根据身份证查询人员
      * @param iscard
      * @return

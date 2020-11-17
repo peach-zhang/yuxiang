@@ -26,6 +26,7 @@ public class SysBackgroundImageServiceImpl extends ServiceImpl<SysBackgroundImag
     @Autowired
     private SysBackgroundImageMapper sysBackgroundImageMapper;
 
+    @Cacheable("BackgroundImage")
     @Override
     public List<SysBackgroundImage> getBackgroundImageList() {
         return sysBackgroundImageMapper.selectList(null);

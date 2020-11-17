@@ -2,6 +2,7 @@ package com.yuxianglw.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuxianglw.entity.SysPermission;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,5 +22,5 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
      * @param roleIds
      * @return
      */
-    List<SysPermission> queryPermissionByRoleIds(List<String> roleIds);
+    List<SysPermission> queryPermissionByRoleIds(@Param("roleIds") List<String> roleIds);
 }

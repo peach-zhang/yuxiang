@@ -2,6 +2,7 @@ package com.yuxianglw.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuxianglw.entity.SysUser;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SysUserMapper extends BaseMapper<SysUser> {
-    SysUser selectUserByName(String username);
+    /**
+     * 根据名称查询用户
+     * @param username
+     * @return
+     */
+    SysUser selectUserByName(@Param("username") String username);
 }

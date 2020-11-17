@@ -16,13 +16,16 @@ import java.util.List;
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
-    /*
-    *根据Parent 查找子类菜单
-    */
-    public List<SysMenu> queryMenuByParent(@Param("parendId") String parendId);
-
-    /*
-     *获取父级菜单
+    /**
+     * 根据Parent 查找子类菜单
+     * @param parendId
+     * @return
      */
-    public List<SysMenu> queryParentMenu();
+     List<SysMenu> queryMenuByParent(@Param("parendId") String parendId);
+
+    /**
+     * 获取父级菜单
+     * @return
+     */
+     List<SysMenu> queryParentMenu();
 }
