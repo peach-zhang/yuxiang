@@ -3,6 +3,7 @@ package com.yuxianglw.service;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysLabour;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -71,4 +72,11 @@ public interface SysLabourService extends IService<SysLabour> {
      * @param sex
      */
     void userListDownload(HttpServletResponse response, String name, String phone, String idcard, String sex);
+
+    /**
+     * 批量上传名单
+     * @param file
+     * @return
+     */
+    Result<?> batchUploadSysLabour(MultipartFile file);
 }

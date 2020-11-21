@@ -6,6 +6,7 @@ import com.yuxianglw.entity.SysLabour;
 import com.yuxianglw.service.SysLabourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,6 +70,11 @@ public class SysLabourController {
                                  @RequestParam(value = "idcard",required = false) String idcard,
                                  @RequestParam(value = "sex",required = false) String sex){
         sysLabourService.userListDownload(response,name,phone,idcard,sex);
+    }
+
+    @PostMapping("/batchUploadSysLabour")
+    public Result<?> batchUploadSysLabour(@RequestParam("file") MultipartFile file){
+       return sysLabourService.batchUploadSysLabour(file);
     }
 
 }

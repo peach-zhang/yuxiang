@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -166,5 +167,22 @@ public class SysLabourServiceImpl extends ServiceImpl<SysLabourMapper, SysLabour
             log.error("下载模板失败！{}",e.getMessage());
             throw  new ServiceException(ErrorCodeEnum.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    @Transactional
+    public Result<?> batchUploadSysLabour(MultipartFile file) {
+        final List<SysLabour> sysLabours = ExcelUtiles.importExcel(file, 1, 1, SysLabour.class);
+        final String userName = (String)SecurityUtils.getSubject().getPrincipal();
+        final SysUser sysUser = sysUserMapper.selectUserByName(userName);
+        for (SysLabour sysLabour : sysLabours) {
+            String idcard = sysLabour.getIdcard();
+            if (StringUtils.isBlank(idcard)) {continue;}
+            List<SysLabour> labours = sysLabourMapper.queryLabourByIdcard(idcard);
+            if(CollectionUtils.isNotEmpty(labours)){continue;}
+            sysLabour.setBelong(sysUser.getId());
+            sysLabourMapper.insert(sysLabour);
+        }
+        return Result.ok("导入成功！");
     }
 }

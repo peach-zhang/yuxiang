@@ -62,7 +62,7 @@ public class ExcelUtiles {
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
-            //throw new NormalException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -84,10 +84,9 @@ public class ExcelUtiles {
         try {
             list = ExcelImportUtil.importExcel(new File(filePath), pojoClass, params);
         }catch (NoSuchElementException e){
-            //throw new NormalException("模板不能为空");
+            throw new RuntimeException("模板不能为空");
         } catch (Exception e) {
-            e.printStackTrace();
-            //throw new NormalException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         } return list;
     }
 
@@ -101,10 +100,9 @@ public class ExcelUtiles {
         try {
             list = ExcelImportUtil.importExcel(file.getInputStream(), pojoClass, params);
         }catch (NoSuchElementException e){
-            // throw new NormalException("excel文件不能为空");
+             throw new RuntimeException("excel文件不能为空");
         } catch (Exception e) {
-            //throw new NormalException(e.getMessage());
-            System.out.println(e.getMessage());
+            throw new RuntimeException("导入失败！");
         }
         return list;
     }
