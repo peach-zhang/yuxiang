@@ -1,6 +1,9 @@
 package com.yuxianglw.common;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 业务静态常量
  * @author zhangtao
@@ -40,4 +43,6 @@ public class BizConstant {
     public static final String WOMAN = "WOMAN";
     //字符
     public static final String VARCHAR = "QWERTYUIOPASDFGHJKLZXCVBNM123456789";
+    //不记录日志的方法
+    public static final List<String> UN_LOG = Arrays.asList(new String[]{"logout","userListDownload","batchUploadSysLabour"});
 }

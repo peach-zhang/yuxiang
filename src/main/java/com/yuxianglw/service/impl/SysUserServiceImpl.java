@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -265,5 +266,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     /*根据id 查询除上级*/
     private SysUser queryUserByid(String id){
         return  sysUserMapper.selectById(id);
+    }
+
+    @Override
+    @Transactional
+    public Result<?> changePassWord(Map<String, String> passWord) {
+        Assert.notEmpty(passWord,"参数不可为空！");
+        String PassWord = passWord.get("passWord");
+        String CheckPassWord = passWord.get("checkPassWord");
+        if(!StringUtils.equals(PassWord,CheckPassWord)){
+            return Result.error("两次密码不一致！");
+        }
+        final String username =(String) SecurityUtils.getSubject().getPrincipal();
+        final SysUser sysUser = sysUserMapper.selectUserByName(username);
+        //随机盐
+        final String salt = RandomUtil.randomString(10);
+        sysUser.setSalt(salt);
+        //生成密码
+        final String password = MD5Utils.md5Encryption(PassWord, salt);
+        sysUser.setPassWord(password);
+        sysUserMapper.updateById(sysUser);
+        return Result.ok("修改成功请成功登录！");
     }
 }

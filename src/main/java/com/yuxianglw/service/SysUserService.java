@@ -72,4 +72,11 @@ public interface SysUserService extends IService<SysUser> {
      *
      */
     Result<?> queryUserInfo();
+
+    /**
+     * 修改密码
+     * @param passWord
+     * @return
+     */
+    Result<?> changePassWord(Map<String, String> passWord);
 }

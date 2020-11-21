@@ -18,11 +18,11 @@
     </resultMap>
     <!--根据父类id 查询菜单-->
     <select id="queryMenuByParent" resultMap="BaseResultMap" parameterType="string">
-        SELECT * FROM SYS_MENU WHERE PARENT = #{parendId}
+        SELECT * FROM SYS_MENU WHERE PARENT = #{parendId} AND DEL_FLAG = '0'
     </select>
     <!--获取父级菜单-->
     <select id="queryParentMenu" resultType="com.yuxianglw.entity.SysMenu">
-        SELECT * FROM SYS_MENU WHERE PARENT IS null
+        SELECT * FROM SYS_MENU WHERE PARENT IS null AND DEL_FLAG = '0'
     </select>
 
 </mapper>

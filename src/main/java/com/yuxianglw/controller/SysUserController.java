@@ -65,5 +65,10 @@ public class SysUserController {
         return sysUserService.queryUserInfo();
     }
 
+    @PutMapping("/changePassWord")
+    public  Result<?> changePassWord(@RequestBody Map<String,String> passWord){
+        return sysUserService.changePassWord(passWord);
+    }
+
 }
 

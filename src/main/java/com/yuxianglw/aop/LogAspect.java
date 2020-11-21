@@ -1,6 +1,7 @@
 package com.yuxianglw.aop;
 
 import com.alibaba.fastjson.JSON;
+import com.yuxianglw.common.BizConstant;
 import com.yuxianglw.entity.SysLog;
 import com.yuxianglw.service.SysLogService;
 import com.yuxianglw.utlis.HttpContextUtils;
@@ -97,7 +98,7 @@ public class LogAspect {
             //获取请求的方法名
             String methodName = method.getName();
             //如果是退出不记录日志
-            if(StringUtils.equals("logout",methodName)){
+            if(BizConstant.UN_LOG.contains(methodName)){
                 return;
             }
             sysLog.setMethod(className + "." + methodName);

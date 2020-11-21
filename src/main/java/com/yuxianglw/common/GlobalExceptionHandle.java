@@ -32,7 +32,7 @@ public class GlobalExceptionHandle<T> {
     }
     @ExceptionHandler(AuthenticationException.class)
     public Result handleAuthenticationException(){
-        return Result.error(ErrorCodeEnum.EXPIRED_TOKEN.getResultCode(),ErrorCodeEnum.EXPIRED_TOKEN.getResultMsg());
+        return Result.error(ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultCode(),ErrorCodeEnum.USER_PWD_ACCOUNT_NOT_FOUND.getResultMsg());
     }
 
     @ExceptionHandler(Exception.class)
