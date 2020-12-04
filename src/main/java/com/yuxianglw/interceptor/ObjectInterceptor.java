@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Properties;
 
 /**
+ * @author zhangtao
  * @CreateDateTime: 2020/1/14 20:32
  * @ModifyDateTime:
  * @Description: 用于赋值信息的拦截器
