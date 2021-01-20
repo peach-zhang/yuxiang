@@ -100,9 +100,6 @@ public class LogAspect {
             //获取请求的方法名
             String methodName = method.getName();
             //如果是退出不记录日志
-            if(BizConstant.UN_LOG.contains(methodName)){
-                return;
-            }
             sysLog.setMethod(className + "." + methodName);
             //请求的参数
             Object[] args = joinPoint.getArgs();
