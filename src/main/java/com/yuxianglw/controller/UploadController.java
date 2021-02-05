@@ -47,7 +47,7 @@ public class UploadController {
         OutputStream os = null;
         try {
             os = res.getOutputStream();
-            bis = new BufferedInputStream(new FileInputStream(new File("D:\\DataSource\\" + fileName )));
+            bis = new BufferedInputStream(new FileInputStream("D:\\DataSource\\" + fileName ));
             int i = bis.read(buff);
             while (i != -1) {
                 os.write(buff, 0, buff.length);
