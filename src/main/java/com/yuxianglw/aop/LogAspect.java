@@ -44,6 +44,7 @@ public class LogAspect {
         try {
             //保存日志
             SysLog sysLog = new SysLog();
+
             //日志类型
             sysLog.setType("user_requst");
             //从切面织入点处通过反射机制获取织入点处的方法
