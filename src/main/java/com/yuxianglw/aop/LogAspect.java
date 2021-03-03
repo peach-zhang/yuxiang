@@ -70,7 +70,7 @@ public class LogAspect {
                 sysLogService.save(sysLog);
             }
         } catch (Exception e) {
-            log.error("记录日志失败 {}",e);
+            log.error("记录日志失败 { }",e);
         }
     }
 
