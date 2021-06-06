@@ -1,8 +1,7 @@
 package com.yuxianglw.service;
 
-import com.yuxianglw.common.Result;
-import com.yuxianglw.entity.SysBackgroundImage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuxianglw.entity.SysBackgroundImage;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;

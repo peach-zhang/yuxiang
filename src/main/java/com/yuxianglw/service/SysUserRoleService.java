@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUserRole;
 
-import java.util.List;
 import java.util.Map;
 
 /**

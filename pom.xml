@@ -156,6 +156,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- screw螺丝钉核心 -->
+        <dependency>
+            <groupId>cn.smallbun.screw</groupId>
+            <artifactId>screw-core</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>

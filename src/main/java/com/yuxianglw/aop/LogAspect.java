@@ -1,7 +1,6 @@
 package com.yuxianglw.aop;
 
 import com.alibaba.fastjson.JSON;
-import com.yuxianglw.common.BizConstant;
 import com.yuxianglw.entity.SysLog;
 import com.yuxianglw.service.SysLogService;
 import com.yuxianglw.utlis.HttpContextUtils;
@@ -13,6 +12,7 @@ import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 /**

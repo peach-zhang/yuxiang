@@ -3,7 +3,6 @@ package com.yuxianglw.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuxianglw.entity.SysUser;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**

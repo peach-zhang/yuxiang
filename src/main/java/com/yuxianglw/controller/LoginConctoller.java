@@ -3,8 +3,6 @@ package com.yuxianglw.controller;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.dto.LoginUser;
 import com.yuxianglw.service.SysUserService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.util.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

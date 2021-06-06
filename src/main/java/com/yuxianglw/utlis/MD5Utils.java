@@ -1,6 +1,5 @@
 package com.yuxianglw.utlis;
 
-import com.yuxianglw.common.BizConstant;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**

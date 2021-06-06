@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuxianglw.common.Result;
 import com.yuxianglw.entity.SysUser;
 import com.yuxianglw.entity.dto.SysUserDTO;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
